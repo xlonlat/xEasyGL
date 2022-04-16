@@ -21,4 +21,13 @@ public:
 	~Viewer(void);
 };
 
+class XEASYGL_API Application
+{
+public:
+	Application();
+	virtual ~Application();
+
+	void Run();
+};
+
 #endif // _XEASYGL_H_

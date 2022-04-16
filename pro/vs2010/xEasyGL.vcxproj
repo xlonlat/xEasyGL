@@ -87,14 +87,15 @@
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
-      <PreprocessorDefinitions>XEASYGL_PLATFORM_WINDOWS;XEASYGL_EXPORT_DLL;_MBCS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>
-      </AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>XEASYGL_PLATFORM_WINDOWS;XEASYGL_EXPORT_DLL;GLEW_STATIC;_MBCS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>$(SolutionDir)..\..\inc\</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>$(SolutionDir)../../lib/$(Configuration)_$(Platform)/</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(SolutionDir)..\..\lib\$(Configuration)_$(Platform)\</AdditionalLibraryDirectories>
       <ImportLibrary>$(SolutionDir)../../lib/$(Configuration)_$(Platform)/$(TargetName).lib</ImportLibrary>
+      <AdditionalDependencies>glew32s.lib;opengl32.lib;</AdditionalDependencies>
+      <IgnoreSpecificDefaultLibraries>LIBCMT.lib</IgnoreSpecificDefaultLibraries>
     </Link>
     <PostBuildEvent>
       <Command>copy /y "$(SolutionDir)..\..\src\xEasyGL.h" "$(SolutionDir)..\..\inc\xEasyGL\xEasyGL.h" </Command>
@@ -104,14 +105,15 @@
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
-      <PreprocessorDefinitions>XEASYGL_PLATFORM_WINDOWS;XEASYGL_EXPORT_DLL;_MBCS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>
-      </AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>XEASYGL_PLATFORM_WINDOWS;XEASYGL_EXPORT_DLL;GLEW_STATIC;_MBCS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>$(SolutionDir)..\..\inc\</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>$(SolutionDir)../../lib/$(Configuration)_$(Platform)/</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(SolutionDir)..\..\lib\$(Configuration)_$(Platform)\</AdditionalLibraryDirectories>
       <ImportLibrary>$(SolutionDir)../../lib/$(Configuration)_$(Platform)/$(TargetName).lib</ImportLibrary>
+      <AdditionalDependencies>glew32s.lib;opengl32.lib;</AdditionalDependencies>
+      <IgnoreSpecificDefaultLibraries>LIBCMT.lib</IgnoreSpecificDefaultLibraries>
     </Link>
     <PostBuildEvent>
       <Command>copy /y "$(SolutionDir)..\..\src\xEasyGL.h" "$(SolutionDir)..\..\inc\xEasyGL\xEasyGL.h" </Command>
@@ -123,16 +125,17 @@
       <Optimization>MaxSpeed</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
-      <PreprocessorDefinitions>XEASYGL_PLATFORM_WINDOWS;XEASYGL_EXPORT_DLL;_MBCS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>
-      </AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>XEASYGL_PLATFORM_WINDOWS;XEASYGL_EXPORT_DLL;GLEW_STATIC;_MBCS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>$(SolutionDir)..\..\inc\</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
-      <AdditionalLibraryDirectories>$(SolutionDir)../../lib/$(Configuration)_$(Platform)/</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(SolutionDir)..\..\lib\$(Configuration)_$(Platform)\</AdditionalLibraryDirectories>
       <ImportLibrary>$(SolutionDir)../../lib/$(Configuration)_$(Platform)/$(TargetName).lib</ImportLibrary>
+      <AdditionalDependencies>glew32s.lib;opengl32.lib;</AdditionalDependencies>
+      <IgnoreSpecificDefaultLibraries>LIBCMT.lib</IgnoreSpecificDefaultLibraries>
     </Link>
     <PostBuildEvent>
       <Command>copy /y "$(SolutionDir)..\..\src\xEasyGL.h" "$(SolutionDir)..\..\inc\xEasyGL\xEasyGL.h" </Command>
@@ -144,16 +147,17 @@
       <Optimization>MaxSpeed</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
-      <PreprocessorDefinitions>XEASYGL_PLATFORM_WINDOWS;XEASYGL_EXPORT_DLL;_MBCS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>
-      </AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>XEASYGL_PLATFORM_WINDOWS;XEASYGL_EXPORT_DLL;GLEW_STATIC;_MBCS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>$(SolutionDir)..\..\inc\</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
-      <AdditionalLibraryDirectories>$(SolutionDir)../../lib/$(Configuration)_$(Platform)/</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(SolutionDir)..\..\lib\$(Configuration)_$(Platform)\</AdditionalLibraryDirectories>
       <ImportLibrary>$(SolutionDir)../../lib/$(Configuration)_$(Platform)/$(TargetName).lib</ImportLibrary>
+      <AdditionalDependencies>glew32s.lib;opengl32.lib;</AdditionalDependencies>
+      <IgnoreSpecificDefaultLibraries>LIBCMT.lib</IgnoreSpecificDefaultLibraries>
     </Link>
     <PostBuildEvent>
       <Command>copy /y "$(SolutionDir)..\..\src\xEasyGL.h" "$(SolutionDir)..\..\inc\xEasyGL\xEasyGL.h" </Command>

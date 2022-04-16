@@ -85,12 +85,12 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <OutDir>$(SolutionDir)..\..\lib\$(Configuration)_$(Platform)\</OutDir>
     <IntDir>$(SolutionDir)..\..\tmp\$(Configuration)_$(Platform)\</IntDir>
-    <TargetName>glew32sd</TargetName>
+    <TargetName>glew32s</TargetName>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <OutDir>$(SolutionDir)..\..\lib\$(Configuration)_$(Platform)\</OutDir>
     <IntDir>$(SolutionDir)..\..\tmp\$(Configuration)_$(Platform)\</IntDir>
-    <TargetName>glew32sd</TargetName>
+    <TargetName>glew32s</TargetName>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Template|Win32'">
     <OutDir>$(LIB_DIR)\$(Configuration)\$(PlatformName)\</OutDir>
