@@ -1,5 +1,7 @@
 # xEasyGL
 
+    English content is translated by Google (including this sentence).
+
 ## Purpose | 目的
 
 This project is for people to develop OpenGL programs faster and easier, and avoid too many choices, such as glut, glfw, glew, glad, glu, win32 window, mfc window, etc., and also hope to quickly build a project development environment without requiring too much configuration.
