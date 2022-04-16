@@ -1,32 +1,19 @@
-# Prerequisites
-*.d
+# Directories
+bin/Debug_Win32/
+bin/Debug_x64/
+bin/Release_Win32/
+bin/Release_x64/
+lib/Debug_Win32/
+lib/Debug_x64/
+lib/Release_Win32/
+lib/Release_x64/
+tmp/Debug_Win32/
+tmp/Debug_x64/
+tmp/Release_Win32/
+tmp/Release_x64/
 
-# Compiled Object files
-*.slo
-*.lo
-*.o
-*.obj
-
-# Precompiled Headers
-*.gch
-*.pch
-
-# Compiled Dynamic libraries
-*.so
-*.dylib
-*.dll
-
-# Fortran module files
-*.mod
-*.smod
-
-# Compiled Static libraries
-*.lai
-*.la
-*.a
-*.lib
-
-# Executables
-*.exe
-*.out
-*.app
+# Files
+*.opensdf
+*.sdf
+*.suo
+*.user

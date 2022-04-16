@@ -1,4 +1,8 @@
-#pragma once
+
+
+
+#ifndef _XEASYGL_H_
+#define _XEASYGL_H_
 
 #ifdef XEASYGL_PLATFORM_WINDOWS
 #ifdef XEASYGL_EXPORT_DLL
@@ -10,10 +14,11 @@
 #error "xEasyGL only support Windows!"
 #endif // XEASYGL_PLATFORM_WINDOWS
 
-class XEASYGL_API iViewer
+class XEASYGL_API Viewer
 {
 public:
-	iViewer(void);
-	~iViewer(void);
+	Viewer(void);
+	~Viewer(void);
 };
 
+#endif // _XEASYGL_H_
