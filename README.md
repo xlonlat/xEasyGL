@@ -90,11 +90,7 @@ The next development route should be:
 -->嗯。。。剩下的还没想好，慢慢补充，由于这个项目的名字就是“easy”，所以不会加太多东西，毕竟这个项目的初衷只是搭建OpenGL环境而已。
 
 ---
-<<<<<<< HEAD
- 
-=======
 
->>>>>>> fcf56bff80250a57542d4f88bd8cc3953c3bddc3
 <p align="right">2022.04.17 02:09 in Hangzhou.</p>
 
 
