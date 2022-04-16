@@ -23,11 +23,15 @@ public:
 
 class XEASYGL_API Application
 {
+private:
+	Viewer	m_viewer;
 public:
-	Application();
+	Application(const Viewer& viewer);
 	virtual ~Application();
 
-	void Run();
+	void    Init();
+	void    Run();
+	void    Clear();
 };
 
 #endif // _XEASYGL_H_

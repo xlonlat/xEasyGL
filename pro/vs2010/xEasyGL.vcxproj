@@ -94,7 +94,7 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalLibraryDirectories>$(SolutionDir)..\..\lib\$(Configuration)_$(Platform)\</AdditionalLibraryDirectories>
       <ImportLibrary>$(SolutionDir)../../lib/$(Configuration)_$(Platform)/$(TargetName).lib</ImportLibrary>
-      <AdditionalDependencies>glew32s.lib;opengl32.lib;</AdditionalDependencies>
+      <AdditionalDependencies>glfw3.lib;glew32s.lib;opengl32.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <IgnoreSpecificDefaultLibraries>LIBCMT.lib</IgnoreSpecificDefaultLibraries>
     </Link>
     <PostBuildEvent>
@@ -112,7 +112,7 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalLibraryDirectories>$(SolutionDir)..\..\lib\$(Configuration)_$(Platform)\</AdditionalLibraryDirectories>
       <ImportLibrary>$(SolutionDir)../../lib/$(Configuration)_$(Platform)/$(TargetName).lib</ImportLibrary>
-      <AdditionalDependencies>glew32s.lib;opengl32.lib;</AdditionalDependencies>
+      <AdditionalDependencies>glfw3.lib;glew32s.lib;opengl32.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <IgnoreSpecificDefaultLibraries>LIBCMT.lib</IgnoreSpecificDefaultLibraries>
     </Link>
     <PostBuildEvent>
@@ -134,7 +134,7 @@
       <OptimizeReferences>true</OptimizeReferences>
       <AdditionalLibraryDirectories>$(SolutionDir)..\..\lib\$(Configuration)_$(Platform)\</AdditionalLibraryDirectories>
       <ImportLibrary>$(SolutionDir)../../lib/$(Configuration)_$(Platform)/$(TargetName).lib</ImportLibrary>
-      <AdditionalDependencies>glew32s.lib;opengl32.lib;</AdditionalDependencies>
+      <AdditionalDependencies>glfw3.lib;glew32s.lib;opengl32.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <IgnoreSpecificDefaultLibraries>LIBCMT.lib</IgnoreSpecificDefaultLibraries>
     </Link>
     <PostBuildEvent>
@@ -156,7 +156,7 @@
       <OptimizeReferences>true</OptimizeReferences>
       <AdditionalLibraryDirectories>$(SolutionDir)..\..\lib\$(Configuration)_$(Platform)\</AdditionalLibraryDirectories>
       <ImportLibrary>$(SolutionDir)../../lib/$(Configuration)_$(Platform)/$(TargetName).lib</ImportLibrary>
-      <AdditionalDependencies>glew32s.lib;opengl32.lib;</AdditionalDependencies>
+      <AdditionalDependencies>glfw3.lib;glew32s.lib;opengl32.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <IgnoreSpecificDefaultLibraries>LIBCMT.lib</IgnoreSpecificDefaultLibraries>
     </Link>
     <PostBuildEvent>
