@@ -11,6 +11,7 @@ tmp/Debug_Win32/
 tmp/Debug_x64/
 tmp/Release_Win32/
 tmp/Release_x64/
+pro/vs2022/
 
 # Files
 *.opensdf
