@@ -1,45 +1,28 @@
 #include "xEasyGL.h"
 
-#include <GLEW/GL/glew.h>
-#include <GLFW/glfw3.h>
-
-//////////////////////////////////////////////////////////////////////////
-// Viewer:
-
-Viewer::Viewer(void)
+namespace xlonlat
 {
-	glfwInit();
-	glewInit();
-}
+	namespace xEasyGL
+	{
+		static int flag = 0;
 
-Viewer::~Viewer(void)
-{
-}
+		xApplication::xApplication(const xViewer& viewer) : m_viewer(viewer)
+		{
+			if (!flag++)
+			{
+				glfwInit();
+				glewInit();
+			}
+		}
 
-//////////////////////////////////////////////////////////////////////////
-// Application:
+		xApplication::~xApplication()
+		{
 
-Application::Application(const Viewer& viewer)
-{
-	m_viewer = viewer;
-}
+		}
 
-Application::~Application()
-{
+		void xApplication::Run()
+		{
 
-}
-
-void Application::Init()
-{
-
-}
-
-void Application::Run()
-{
-
-}
-
-void Application::Clear()
-{
-
+		}
+	}
 }
