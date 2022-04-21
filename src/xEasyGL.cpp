@@ -4,25 +4,22 @@ namespace xlonlat
 {
 	namespace xEasyGL
 	{
-		static int flag = 0;
+		xGlobal& xGlobal::m_instance = xGlobal::xGlobal();
 
-		xApplication::xApplication(const xViewer& viewer) : m_viewer(viewer)
+		xGlobal::xGlobal()
 		{
-			if (!flag++)
-			{
-				glfwInit();
-				glewInit();
-			}
+			// Initialize something...
 		}
 
-		xApplication::~xApplication()
+		const xGlobal& xGlobal::Instance()
 		{
-
+			return m_instance;
 		}
 
-		void xApplication::Run()
+		void xCamera::State(const xCameraState& state)
 		{
-
+			m_state = state;
 		}
+
 	}
 }

@@ -1,9 +1,15 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 11.00
 # Visual Studio 2010
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "xApp", "xApp.vcxproj", "{1AAF961E-92B0-4DDA-A020-45FB95E20C91}"
+	ProjectSection(ProjectDependencies) = postProject
+		{0E9A9DC9-BB25-45CF-8039-03DF4122EAB4} = {0E9A9DC9-BB25-45CF-8039-03DF4122EAB4}
+	EndProjectSection
+EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "xEasyGL", "xEasyGL.vcxproj", "{0E9A9DC9-BB25-45CF-8039-03DF4122EAB4}"
 	ProjectSection(ProjectDependencies) = postProject
 		{664E6F0D-6784-4760-9565-D54F8EB1EDF4} = {664E6F0D-6784-4760-9565-D54F8EB1EDF4}
+		{DBC8CC1C-44C2-375E-9406-94071288618E} = {DBC8CC1C-44C2-375E-9406-94071288618E}
 	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "glew_static", "..\..\dep\GLEW_v2.1.0\glew-2.1.0\build\vc10\glew_static.vcxproj", "{664E6F0D-6784-4760-9565-D54F8EB1EDF4}"
@@ -44,6 +50,14 @@ Global
 		{DBC8CC1C-44C2-375E-9406-94071288618E}.Release|Win32.Build.0 = Release|Win32
 		{DBC8CC1C-44C2-375E-9406-94071288618E}.Release|x64.ActiveCfg = Release|x64
 		{DBC8CC1C-44C2-375E-9406-94071288618E}.Release|x64.Build.0 = Release|x64
+		{1AAF961E-92B0-4DDA-A020-45FB95E20C91}.Debug|Win32.ActiveCfg = Debug|Win32
+		{1AAF961E-92B0-4DDA-A020-45FB95E20C91}.Debug|Win32.Build.0 = Debug|Win32
+		{1AAF961E-92B0-4DDA-A020-45FB95E20C91}.Debug|x64.ActiveCfg = Debug|x64
+		{1AAF961E-92B0-4DDA-A020-45FB95E20C91}.Debug|x64.Build.0 = Debug|x64
+		{1AAF961E-92B0-4DDA-A020-45FB95E20C91}.Release|Win32.ActiveCfg = Release|Win32
+		{1AAF961E-92B0-4DDA-A020-45FB95E20C91}.Release|Win32.Build.0 = Release|Win32
+		{1AAF961E-92B0-4DDA-A020-45FB95E20C91}.Release|x64.ActiveCfg = Release|x64
+		{1AAF961E-92B0-4DDA-A020-45FB95E20C91}.Release|x64.Build.0 = Release|x64
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

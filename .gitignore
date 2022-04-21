@@ -7,10 +7,10 @@ lib/Debug_Win32/
 lib/Debug_x64/
 lib/Release_Win32/
 lib/Release_x64/
-tmp/Debug_Win32/
-tmp/Debug_x64/
-tmp/Release_Win32/
-tmp/Release_x64/
+tmp/glew_static/
+tmp/glfw/
+tmp/xApp/
+tmp/xEasyGL/
 pro/vs2022/
 
 # Files

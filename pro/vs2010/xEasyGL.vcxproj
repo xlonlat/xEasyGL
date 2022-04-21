@@ -22,6 +22,7 @@
     <ClCompile Include="..\..\src\xDrawArgs.cpp" />
     <ClCompile Include="..\..\src\xEasyGL.cpp" />
     <ClCompile Include="..\..\src\xViewer.cpp" />
+    <ClCompile Include="..\..\src\xWindow.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\src\xEasyGL.h" />
@@ -35,23 +36,27 @@
     <ConfigurationType>DynamicLibrary</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
     <CharacterSet>MultiByte</CharacterSet>
+    <PlatformToolset>v100</PlatformToolset>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
     <ConfigurationType>DynamicLibrary</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
     <CharacterSet>MultiByte</CharacterSet>
+    <PlatformToolset>v100</PlatformToolset>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
     <ConfigurationType>DynamicLibrary</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
     <WholeProgramOptimization>true</WholeProgramOptimization>
     <CharacterSet>MultiByte</CharacterSet>
+    <PlatformToolset>v100</PlatformToolset>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
     <ConfigurationType>DynamicLibrary</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
     <WholeProgramOptimization>true</WholeProgramOptimization>
     <CharacterSet>MultiByte</CharacterSet>
+    <PlatformToolset>v100</PlatformToolset>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
   <ImportGroup Label="ExtensionSettings">
@@ -71,19 +76,19 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <OutDir>$(SolutionDir)..\..\bin\$(Configuration)_$(Platform)\</OutDir>
-    <IntDir>$(SolutionDir)..\..\tmp\$(Configuration)_$(Platform)\</IntDir>
+    <IntDir>$(SolutionDir)..\..\tmp\$(ProjectName)\$(Configuration)_$(Platform)\</IntDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <OutDir>$(SolutionDir)..\..\bin\$(Configuration)_$(Platform)\</OutDir>
-    <IntDir>$(SolutionDir)..\..\tmp\$(Configuration)_$(Platform)\</IntDir>
+    <IntDir>$(SolutionDir)..\..\tmp\$(ProjectName)\$(Configuration)_$(Platform)\</IntDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <OutDir>$(SolutionDir)..\..\bin\$(Configuration)_$(Platform)\</OutDir>
-    <IntDir>$(SolutionDir)..\..\tmp\$(Configuration)_$(Platform)\</IntDir>
+    <IntDir>$(SolutionDir)..\..\tmp\$(ProjectName)\$(Configuration)_$(Platform)\</IntDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <OutDir>$(SolutionDir)..\..\bin\$(Configuration)_$(Platform)\</OutDir>
-    <IntDir>$(SolutionDir)..\..\tmp\$(Configuration)_$(Platform)\</IntDir>
+    <IntDir>$(SolutionDir)..\..\tmp\$(ProjectName)\$(Configuration)_$(Platform)\</IntDir>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
