@@ -4,20 +4,24 @@ namespace xlonlat
 {
 	namespace xEasyGL
 	{
-		xViewer::xViewer(void) 
+		xViewer::xViewer(xCamera* camera/* = nullptr */)
 		{
 			xViewportState vs;
-			vs.width = 1280;
-			vs.height = 720;
+			vs.x = 0;
+			vs.y = 0;
+			vs.w = 1280;
+			vs.h = 720;
 
 			xProjState ps;
 			ps.zNear = 0.1f;
 			ps.zFar = 100.0f;
 			ps.fovy = 45.0f;
-			ps.aspect = 1.0f * vs.width / vs.height;
+			ps.aspect = 1.0f * vs.w / vs.h;
 
-			m_camera = new xCamera();
 			m_drawArgs = new xDrawArgs(vs, ps);
+
+			camera == nullptr ? m_camera = new xCamera() : m_camera = camera;
+			m_camera->Link(this);
 		}
 
 		xViewer::~xViewer(void)
@@ -64,12 +68,12 @@ namespace xlonlat
 			case xEventType::Resize:
 			{
 				xViewportState vs = m_drawArgs->vs();
-				vs.width = event.x;
-				vs.height = event.y;
+				vs.w = event.x;
+				vs.h = event.y;
 				m_drawArgs->vs(vs);
 
 				xProjState ps = m_drawArgs->ps();
-				ps.aspect = 1.0f * vs.width / vs.height;
+				ps.aspect = 1.0f * vs.w / vs.h;
 				m_drawArgs->ps(ps);
 			}break;
 			default:
@@ -87,10 +91,10 @@ namespace xlonlat
 			const xViewportState& vs = args.vs();
 
 			// Set viewport .
-			glViewport(0, 0, vs.width, vs.height);
+			glViewport(0, 0, vs.w, vs.h);
 
 			// Set projection matrix.
-			glm::mat4 proj = glm::ortho(0.0f, (float)vs.width, (float)vs.height, 0.0f);
+			glm::mat4 proj = glm::ortho(0.0f, (float)vs.w, (float)vs.h, 0.0f);
 			glMatrixMode(GL_PROJECTION);
 			glLoadIdentity();
 			glLoadMatrixf(glm::value_ptr(proj));
@@ -105,7 +109,7 @@ namespace xlonlat
 			const xProjState& ps = args.ps();
 
 			// Set viewport .
-			glViewport(0, 0, vs.width, vs.height);
+			glViewport(0, 0, vs.w, vs.h);
 
 			//glm::vec3 pos(0, 0, 1);
 			//glm::vec3 tar(0, 0, 0);

@@ -6,8 +6,8 @@ namespace xlonlat
 	{
 		xDrawArgs::xDrawArgs()
 		{
-			m_vs.width = 0;
-			m_vs.height = 0;
+			m_vs.w = 0;
+			m_vs.h = 0;
 			m_ps.zNear = 0.f;
 			m_ps.zFar = 0.f;
 			m_ps.fovy = 0.f;

@@ -49,6 +49,7 @@ namespace xlonlat
 		// --------------------------val--------------------------
 		// type==MouseDown  : 0 is left down, 1 is right down, 2 is middle down;
 		// type==MouseUp    : 0 is left up, 1 is right up, 2 is middle up;
+		// type==MouseMove  : 0 is left down, 1 is right down, 2 is middle down;
 		// type==MouseWheel : 0 is zoom out, 1 is zoom in; 
 		// type==KeyDown	: key value;
 		// type==KeyUp		: key value;
@@ -63,8 +64,10 @@ namespace xlonlat
 
 		typedef struct
 		{
-			int width;
-			int height;
+			int x;
+			int y;
+			int w;
+			int h;
 		} xViewportState;
 
 		typedef struct
@@ -82,6 +85,8 @@ namespace xlonlat
 			glm::vec3	up;
 		} xCameraState;
 
+		class xViewer;
+
 		class XEASYGL_API xGlobal
 		{
 		public:
@@ -92,6 +97,12 @@ namespace xlonlat
 			static xGlobal& m_instance;
 		};
 
+		class XEASYGL_API xMath
+		{
+			///////////////////////////////////////
+			// 
+		};
+
 		class XEASYGL_API xCommon
 		{
 		public:
@@ -99,7 +110,7 @@ namespace xlonlat
 			static void PrintMatrix4x4T(T mat[16])
 			{
 				std::cout.setf(std::ios::fixed);
-				std::cout.setf(std::ios::showpos);
+				std::cout.setf(std::ios::showpos); // show '+' or '-'
 				std::cout << std::setprecision(6) <<
 					mat[0] << " " << mat[1] << " " << mat[2] << " " << mat[3] << std::endl <<
 					mat[4] << " " << mat[5] << " " << mat[6] << " " << mat[7] << std::endl <<
@@ -114,6 +125,20 @@ namespace xlonlat
 			{
 				PrintMatrix4x4T<double>(mat);
 			}
+		};
+
+		class XEASYGL_API xEventParser
+		{
+		public :
+			virtual void OnLButtonUp(int cx, int cy){}
+			virtual void OnRButtonUp(int cx, int cy){}
+			virtual void OnLButtonDown(int cx, int cy){}
+			virtual void OnRButtonDown(int cx, int cy){}
+			virtual void OnMouseMove(int cx, int cy, int button) {}
+			virtual void OnMouseWheel(int cx, int cy, bool zoomin) {}
+			virtual void OnSize(int cx, int cy) {}
+			virtual void OnKeyUp(int key) {}
+			virtual void OnKeyDown(int key) {}
 		};
 
 		class XEASYGL_API xDrawArgs
@@ -133,7 +158,7 @@ namespace xlonlat
 			xProjState     m_ps;
 		};
 
-		class XEASYGL_API xLayer
+		class XEASYGL_API xLayer : public xEventParser
 		{
 		public :
 			virtual void	Clear() = 0;
@@ -144,21 +169,26 @@ namespace xlonlat
 		class XEASYGL_API xCamera
 		{
 		public:
+			xCamera();
+			virtual ~xCamera();
+
 			virtual void	Pan() {}
 			virtual void	Rotate() {}
 			virtual void	Zoom() {}
 
-			const xCameraState& State() { return m_state; }
-
+			void  Link(const xViewer* viewer);
 			void  State(const xCameraState& state);
+
+			const xCameraState& State() { return m_state; }
 		protected:
 			xCameraState	m_state;
+			const xViewer*		m_viewer;
 		};
 
-		class XEASYGL_API xViewer
+		class XEASYGL_API xViewer : public xEventParser
 		{
 		public:
-			xViewer(void);
+			xViewer(xCamera* camera = nullptr);
 			~xViewer(void);
 
 			virtual void	 Initialize();

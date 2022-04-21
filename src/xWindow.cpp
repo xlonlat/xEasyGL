@@ -16,6 +16,7 @@ namespace xlonlat
             event.val = 0;
 
             viewer->Event(event);
+            viewer->OnSize(width, height);
         }
         
         // @param[button] 0:Left | 1:Right | 2:Middle.
@@ -35,6 +36,21 @@ namespace xlonlat
             event.val = button;
 
             viewer->Event(event);
+            switch (event.type)
+            {
+            case xEventType::MouseUp:
+            {
+                     if (button == 0) viewer->OnLButtonUp((int)x, (int)y);
+                else if (button == 1) viewer->OnRButtonUp((int)x, (int)y);
+            }break;
+            case xEventType::MouseDown:
+            {
+                     if (button == 0) viewer->OnLButtonDown((int)x, (int)y);
+                else if (button == 1) viewer->OnRButtonDown((int)x, (int)y);
+            }break;
+            default:
+                break;
+            }
         }
 
         void OnMouseMove(GLFWwindow* window, double x, double y)
@@ -42,13 +58,19 @@ namespace xlonlat
             xViewer* viewer = nullptr;
             assert(viewer = (xViewer*)glfwGetWindowUserPointer(window));
 
+            int button = -1;
+            if (glfwGetMouseButton(window, 0) == 1) button = 0;
+            if (glfwGetMouseButton(window, 1) == 1) button = 1;
+            if (glfwGetMouseButton(window, 2) == 1) button = 2;
+
             xEvent event;
             event.type = xEventType::MouseMove;
             event.x = (int)x;
             event.y = (int)y;
-            event.val = -1;
+            event.val = button;
 
             viewer->Event(event);
+            viewer->OnMouseMove((int)x, (int)y, button);
         }
 
          // @param[yoff] 1:zoomin | -1:zoomout.
@@ -67,6 +89,7 @@ namespace xlonlat
             event.val = yoff > 0 ? 1 : 0;
 
             viewer->Event(event);
+            viewer->OnMouseWheel((int)x, (int)y, yoff > 0);
         }
 
 		xWindow::xWindow(xViewer* viewer) : m_viewer(viewer), m_window(nullptr)
@@ -80,8 +103,8 @@ namespace xlonlat
 
 		void xWindow::Run()
 		{
-            int width = m_viewer->DrawArgs().vs().width;
-            int height = m_viewer->DrawArgs().vs().height;
+            int width = m_viewer->DrawArgs().vs().w;
+            int height = m_viewer->DrawArgs().vs().h;
 
             glfwInit();
 
