@@ -6,8 +6,8 @@ namespace xlonlat
 	{
         void OnSize(GLFWwindow* window, int width, int height)
         {
-            xViewer* viewer = nullptr;
-            assert(viewer = (xViewer*)glfwGetWindowUserPointer(window));
+            xViewer* viewer = (xViewer*)glfwGetWindowUserPointer(window);
+            assert(viewer != nullptr);
 
             xEvent event;
             event.type = xEasyGL::Resize;
@@ -23,8 +23,8 @@ namespace xlonlat
         // @param[action] 0:GLFW_RELEASE | 1:GLFW_PRESS.
         void OnMouseEvent(GLFWwindow* window, int button, int action, int pos)
         {
-            xViewer* viewer = nullptr;
-            assert(viewer = (xViewer*)glfwGetWindowUserPointer(window));
+            xViewer* viewer = (xViewer*)glfwGetWindowUserPointer(window);
+            assert(viewer != nullptr);
 
             double x = 0, y = 0;
             glfwGetCursorPos(window, &x, &y);
@@ -60,8 +60,8 @@ namespace xlonlat
 
         void OnMouseMove(GLFWwindow* window, double x, double y)
         {
-            xViewer* viewer = nullptr;
-            assert(viewer = (xViewer*)glfwGetWindowUserPointer(window));
+            xViewer* viewer = (xViewer*)glfwGetWindowUserPointer(window);
+            assert(viewer != nullptr);
 
             int btn = -1;
             if (glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_LEFT)   == 1) btn = 0;
@@ -81,8 +81,8 @@ namespace xlonlat
          // @param[yoff] 1:zoomin | -1:zoomout.
         void OnMouseWheel(GLFWwindow* window, double xoff, double yoff)
         {
-            xViewer* viewer = nullptr;
-            assert(viewer = (xViewer*)glfwGetWindowUserPointer(window));
+            xViewer* viewer = (xViewer*)glfwGetWindowUserPointer(window);
+            assert(viewer != nullptr);
 
             double x = 0, y = 0;
             glfwGetCursorPos(window, &x, &y);
@@ -102,8 +102,8 @@ namespace xlonlat
 			if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS)
 				glfwSetWindowShouldClose(window, GL_TRUE);
 
-			xViewer* viewer = nullptr;
-			assert(viewer = (xViewer*)glfwGetWindowUserPointer(window));
+            xViewer* viewer = (xViewer*)glfwGetWindowUserPointer(window);
+            assert(viewer != nullptr);
 
 			double x = 0, y = 0;
 			glfwGetCursorPos(window, &x, &y);

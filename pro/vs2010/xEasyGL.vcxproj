@@ -27,6 +27,7 @@
     <ConfigurationType>DynamicLibrary</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
     <CharacterSet>MultiByte</CharacterSet>
+    <PlatformToolset>v100</PlatformToolset>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
     <ConfigurationType>DynamicLibrary</ConfigurationType>
@@ -66,11 +67,11 @@
     <OutDir>$(SolutionDir)..\..\bin\$(Configuration)_$(Platform)\</OutDir>
     <IntDir>$(SolutionDir)..\..\tmp\$(ProjectName)\$(Configuration)_$(Platform)\</IntDir>
   </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <OutDir>$(SolutionDir)..\..\bin\$(Configuration)_$(Platform)\</OutDir>
     <IntDir>$(SolutionDir)..\..\tmp\$(ProjectName)\$(Configuration)_$(Platform)\</IntDir>
   </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <OutDir>$(SolutionDir)..\..\bin\$(Configuration)_$(Platform)\</OutDir>
     <IntDir>$(SolutionDir)..\..\tmp\$(ProjectName)\$(Configuration)_$(Platform)\</IntDir>
   </PropertyGroup>
@@ -107,7 +108,7 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalLibraryDirectories>$(SolutionDir)..\..\lib\$(Configuration)_$(Platform)\</AdditionalLibraryDirectories>
       <ImportLibrary>$(SolutionDir)../../lib/$(Configuration)_$(Platform)/$(TargetName).lib</ImportLibrary>
-      <AdditionalDependencies>glfw3.lib;glew32s.lib;opengl32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>glfw3.lib;glew.lib;opengl32.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <IgnoreSpecificDefaultLibraries>LIBCMT.lib</IgnoreSpecificDefaultLibraries>
     </Link>
     <PostBuildEvent>
@@ -129,7 +130,7 @@
       <OptimizeReferences>true</OptimizeReferences>
       <AdditionalLibraryDirectories>$(SolutionDir)..\..\lib\$(Configuration)_$(Platform)\</AdditionalLibraryDirectories>
       <ImportLibrary>$(SolutionDir)../../lib/$(Configuration)_$(Platform)/$(TargetName).lib</ImportLibrary>
-      <AdditionalDependencies>glfw3.lib;glew32s.lib;opengl32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>glfw3.lib;glew.lib;opengl32.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <IgnoreSpecificDefaultLibraries>LIBCMT.lib</IgnoreSpecificDefaultLibraries>
     </Link>
     <PostBuildEvent>
@@ -151,7 +152,7 @@
       <OptimizeReferences>true</OptimizeReferences>
       <AdditionalLibraryDirectories>$(SolutionDir)..\..\lib\$(Configuration)_$(Platform)\</AdditionalLibraryDirectories>
       <ImportLibrary>$(SolutionDir)../../lib/$(Configuration)_$(Platform)/$(TargetName).lib</ImportLibrary>
-      <AdditionalDependencies>glfw3.lib;glew32s.lib;opengl32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>glfw3.lib;glew.lib;opengl32.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <IgnoreSpecificDefaultLibraries>LIBCMT.lib</IgnoreSpecificDefaultLibraries>
     </Link>
     <PostBuildEvent>
@@ -162,12 +163,12 @@
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>
   <ItemGroup>
+    <ClInclude Include="..\..\src\xEasyGL.h" />
+  </ItemGroup>
+  <ItemGroup>
     <ClCompile Include="..\..\src\xDrawArgs.cpp" />
     <ClCompile Include="..\..\src\xEasyGL.cpp" />
     <ClCompile Include="..\..\src\xViewer.cpp" />
     <ClCompile Include="..\..\src\xWindow.cpp" />
-  </ItemGroup>
-  <ItemGroup>
-    <ClInclude Include="..\..\src\xEasyGL.h" />
   </ItemGroup>
 </Project>
