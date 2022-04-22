@@ -14,14 +14,20 @@ namespace xlonlat
 
 			xProjState ps;
 			ps.zNear = 0.1f;
-			ps.zFar = 100.0f;
+			ps.zFar = 1000.0f;
 			ps.fovy = 45.0f;
 			ps.aspect = 1.0f * vs.w / vs.h;
+
+			xCameraState cam;
+			cam.pos = glm::vec3(0.f, 0.f, 300.f);
+			cam.lookAt = glm::vec3(0.f, 0.f, 0.f);
+			cam.up = glm::vec3(0.f, 1.f, 0.f);
 
 			m_drawArgs = new xDrawArgs(vs, ps);
 
 			camera == nullptr ? m_camera = new xCamera() : m_camera = camera;
 			m_camera->Link(this);
+			m_camera->State(cam);
 		}
 
 		xViewer::~xViewer(void)
@@ -42,17 +48,36 @@ namespace xlonlat
 
 			glEnable(GL_DEPTH_TEST);
 
-			Begin2D(*m_drawArgs);
+			Begin2D();
 			{
-				glColor3f(1.0f, 0.0f, 0.0f);
-				glBegin(GL_LINES);
-				glVertex3f(0.0f, 0.0f, 0.0f);
-				glVertex3f(1000.0f, 1000.0f, 0.0f);
+				glBegin(GL_TRIANGLES);
+				glColor3f(1.0f, 0.0f, 0.0f); glVertex3f(100.0f,   0.0f, 0.0f);
+				glColor3f(0.0f, 1.0f, 0.0f); glVertex3f(  0.0f, 100.0f, 0.0f);
+				glColor3f(0.0f, 0.0f, 1.0f); glVertex3f(200.0f, 100.0f, 0.0f);
 				glEnd();
 			}
 
-			Begin3D(*m_drawArgs);
+			Begin3D();
 			{
+				glPushMatrix();
+				glScaled(10.0, 10.0, 10.0);
+				glBegin(GL_TRIANGLES);
+				glColor3f(1.0f, 0.0f, 0.0f); glVertex3f( 0.0f,  1.0f, 0.0f);
+				glColor3f(0.0f, 1.0f, 0.0f); glVertex3f(-1.0f, -1.0f, 0.0f);
+				glColor3f(0.0f, 0.0f, 1.0f); glVertex3f( 1.0f, -1.0f, 0.0f);
+				glEnd();
+				glPopMatrix();
+
+				glBegin(GL_LINES);
+				for (int i=-100; i<=100; i+=2)
+				{
+					glColor3f(0.4f, 0.4f, 0.4f); glVertex3f(i * 1.0f,  100.0f, 0.0f);
+					glColor3f(0.4f, 0.4f, 0.4f); glVertex3f(i * 1.0f, -100.0f, 0.0f);
+
+					glColor3f(0.4f, 0.4f, 0.4f); glVertex3f( 100.0f, i * 1.0f, 0.0f);
+					glColor3f(0.4f, 0.4f, 0.4f); glVertex3f(-100.0f, i * 1.0f, 0.0f);
+				}
+				glEnd();
 
 			}
 		}
@@ -86,9 +111,9 @@ namespace xlonlat
 			return *m_drawArgs;
 		}
 
-		void xViewer::Begin2D(const xDrawArgs& args)
+		void xViewer::Begin2D()
 		{
-			const xViewportState& vs = args.vs();
+			const xViewportState& vs = m_drawArgs->vs();
 
 			// Set viewport .
 			glViewport(0, 0, vs.w, vs.h);
@@ -103,18 +128,25 @@ namespace xlonlat
 			glLoadIdentity();
 		}
 
-		void xViewer::Begin3D(const xDrawArgs& args)
+		void xViewer::Begin3D()
 		{
-			const xViewportState& vs = args.vs();
-			const xProjState& ps = args.ps();
+			const xViewportState& vs = m_drawArgs->vs();
+			const xProjState& ps = m_drawArgs->ps();
 
 			// Set viewport .
 			glViewport(0, 0, vs.w, vs.h);
 
-			//glm::vec3 pos(0, 0, 1);
-			//glm::vec3 tar(0, 0, 0);
-			//glm::vec3 up(0, 1, 0);
-			//glm::mat4 model = glm::lookAtRH(pos, tar, up);
+			// Set projection matrix.
+			glm::mat4 proj = glm::perspectiveFovRH(glm::radians(ps.fovy), (float)vs.w, (float)vs.h, ps.zNear, ps.zFar);
+			glMatrixMode(GL_PROJECTION);
+			glLoadIdentity();
+			glLoadMatrixf(glm::value_ptr(proj));
+
+			const xCameraState& cam = m_camera->State();
+			glm::mat4 model = glm::lookAtRH(cam.pos, cam.lookAt, cam.up);
+			glMatrixMode(GL_MODELVIEW);
+			glLoadIdentity();
+			glLoadMatrixf(glm::value_ptr(model));
 
 			//static int print = 0;
 			//if (!print++)

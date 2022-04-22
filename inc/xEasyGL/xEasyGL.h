@@ -175,7 +175,7 @@ namespace xlonlat
 
 			const xCameraState& State() { return m_state; }
 		protected:
-			xCameraState	m_state;
+			xCameraState		m_state;
 			const xViewer*		m_viewer;
 		};
 
@@ -195,8 +195,8 @@ namespace xlonlat
 		protected:
 			xCamera*	m_camera;
 			xDrawArgs*	m_drawArgs;
-			void		Begin2D(const xDrawArgs& args);
-			void		Begin3D(const xDrawArgs& args);
+			void		Begin2D();
+			void		Begin3D();
 		};
 
 		class XEASYGL_API xWindow

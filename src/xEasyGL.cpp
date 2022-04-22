@@ -9,6 +9,8 @@ namespace xlonlat
 		xGlobal::xGlobal()
 		{
 			// Initialize something...
+			char* aaa = (char*)(new char[4]);
+			char* bbb = (char*)malloc(4);
 		}
 
 		const xGlobal& xGlobal::Instance()

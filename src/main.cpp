@@ -19,7 +19,7 @@ public:
 
 		glEnable(GL_DEPTH_TEST);
 
-		Begin2D(*m_drawArgs);
+		Begin2D();
 		{
 			glColor3f(0.0f, 1.0f, 0.0f);
 			glBegin(GL_LINES);
@@ -76,7 +76,7 @@ public:
 
 int main()
 {
-    xWindow window(new ViewerPro);
+    xWindow window(new xViewer);
     window.Run();
 
     _CrtDumpMemoryLeaks();
