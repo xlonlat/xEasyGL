@@ -28,27 +28,27 @@
     <ConfigurationType>StaticLibrary</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
     <CharacterSet>Unicode</CharacterSet>
-    <PlatformToolset>v143</PlatformToolset>
+    <PlatformToolset>v100</PlatformToolset>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
     <ConfigurationType>StaticLibrary</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
     <CharacterSet>Unicode</CharacterSet>
-    <PlatformToolset>v143</PlatformToolset>
+    <PlatformToolset>v100</PlatformToolset>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
     <ConfigurationType>StaticLibrary</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
     <WholeProgramOptimization>true</WholeProgramOptimization>
     <CharacterSet>Unicode</CharacterSet>
-    <PlatformToolset>v143</PlatformToolset>
+    <PlatformToolset>v100</PlatformToolset>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
     <ConfigurationType>StaticLibrary</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
     <WholeProgramOptimization>true</WholeProgramOptimization>
     <CharacterSet>Unicode</CharacterSet>
-    <PlatformToolset>v143</PlatformToolset>
+    <PlatformToolset>v100</PlatformToolset>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
   <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
@@ -95,6 +95,9 @@
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
+    <PostBuildEvent>
+      <Command>copy /y "$(SolutionDir)..\..\dep\GLFW\include\GLFW\*.h" "$(SolutionDir)..\..\inc\GLFW\*.h" </Command>
+    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
@@ -107,6 +110,9 @@
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
+    <PostBuildEvent>
+      <Command>copy /y "$(SolutionDir)..\..\dep\GLFW\include\GLFW\*.h" "$(SolutionDir)..\..\inc\GLFW\*.h" </Command>
+    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>
@@ -123,6 +129,9 @@
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
+    <PostBuildEvent>
+      <Command>copy /y "$(SolutionDir)..\..\dep\GLFW\include\GLFW\*.h" "$(SolutionDir)..\..\inc\GLFW\*.h" </Command>
+    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <ClCompile>
@@ -139,6 +148,9 @@
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
+    <PostBuildEvent>
+      <Command>copy /y "$(SolutionDir)..\..\dep\GLFW\include\GLFW\*.h" "$(SolutionDir)..\..\inc\GLFW\*.h" </Command>
+    </PostBuildEvent>
   </ItemDefinitionGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
@@ -149,10 +161,17 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\dep\GLFW\src\context.c" />
+    <ClCompile Include="..\..\dep\GLFW\src\egl_context.c" />
     <ClCompile Include="..\..\dep\GLFW\src\init.c" />
     <ClCompile Include="..\..\dep\GLFW\src\input.c" />
     <ClCompile Include="..\..\dep\GLFW\src\monitor.c" />
+    <ClCompile Include="..\..\dep\GLFW\src\null_init.c" />
+    <ClCompile Include="..\..\dep\GLFW\src\null_joystick.c" />
+    <ClCompile Include="..\..\dep\GLFW\src\null_monitor.c" />
+    <ClCompile Include="..\..\dep\GLFW\src\null_window.c" />
+    <ClCompile Include="..\..\dep\GLFW\src\osmesa_context.c" />
     <ClCompile Include="..\..\dep\GLFW\src\platform.c" />
+    <ClCompile Include="..\..\dep\GLFW\src\vulkan.c" />
     <ClCompile Include="..\..\dep\GLFW\src\window.c" />
     <ClCompile Include="..\..\dep\GLFW\src\win32_module.c" />
     <ClCompile Include="..\..\dep\GLFW\src\win32_time.c" />
