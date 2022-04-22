@@ -7,7 +7,8 @@ class ViewerPro : public xViewer
 {
 public:
 	virtual ~ViewerPro() {}
-	virtual void Render() override
+
+	virtual void Render(double interval) override
     {
 		float width = (float)(m_drawArgs->vs().w);
 		float height = (float)(m_drawArgs->vs().h);
@@ -26,6 +27,10 @@ public:
 			glVertex3f(width, height, 0.0f);
 			glEnd();
 		}
+
+#ifdef _DEBUG
+		//std::cout << "interval:" << interval << std::endl;
+#endif // _DEBUG
     }
 
 	virtual void OnLButtonDown(int cx, int cy) override
@@ -56,6 +61,16 @@ public:
 	virtual void OnMouseWheel(int cx, int cy, bool zoomin) override
 	{
 		std::cout << "OnMouseWheel:" << cx << "," << cy << ",zoomin=" << zoomin << std::endl;
+	}
+
+	virtual void OnKeyDown(int key) override
+	{
+		std::cout << "OnKeyDown:" << key << std::endl;
+	}
+
+	virtual void OnKeyUp(int key) override
+	{
+		std::cout << "OnKeyUp:" << key << std::endl;
 	}
 };
 

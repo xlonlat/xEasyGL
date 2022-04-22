@@ -34,7 +34,7 @@ namespace xlonlat
 		{
 		}
 
-		void xViewer::Render()
+		void xViewer::Render(double interval)
 		{
 			glClearDepth(1.0f);
 			glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
@@ -65,7 +65,7 @@ namespace xlonlat
 		{
 			switch (event.type)
 			{
-			case xEventType::Resize:
+			case xEasyGL::Resize:
 			{
 				xViewportState vs = m_drawArgs->vs();
 				vs.w = event.x;

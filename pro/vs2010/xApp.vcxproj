@@ -24,7 +24,6 @@
   <PropertyGroup Label="Globals">
     <ProjectGuid>{1AAF961E-92B0-4DDA-A020-45FB95E20C91}</ProjectGuid>
     <RootNamespace>xApp</RootNamespace>
-    <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
     <ProjectName>xApp</ProjectName>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />

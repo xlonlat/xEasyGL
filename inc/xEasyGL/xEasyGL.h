@@ -10,13 +10,6 @@
 #define XEASYGL_API __declspec(dllimport)
 #endif // XEASYGL_EXPORT_DLL
 
-#ifdef _DEBUG
-#ifndef DBG_NEW
-#define DBG_NEW new ( _NORMAL_BLOCK , __FILE__ , __LINE__ )
-#define new DBG_NEW
-#endif
-#endif // _DEBUG
-
 #else
 #error "xEasyGL only support Windows!"
 #endif // XEASYGL_PLATFORM_WINDOWS
@@ -34,7 +27,7 @@ namespace xlonlat
 {
 	namespace xEasyGL
 	{
-		enum class xEventType
+		enum xEventType 
 		{
 			None = 0,
 			MouseDown = 1,
@@ -51,8 +44,8 @@ namespace xlonlat
 		// type==MouseUp    : 0 is left up, 1 is right up, 2 is middle up;
 		// type==MouseMove  : 0 is left down, 1 is right down, 2 is middle down;
 		// type==MouseWheel : 0 is zoom out, 1 is zoom in; 
-		// type==KeyDown	: key value;
-		// type==KeyUp		: key value;
+		// type==KeyDown	: key value, same as GLFW;
+		// type==KeyUp		: key value, same as GLFW;
 		// -------------------------------------------------------
 		typedef struct
 		{
@@ -91,9 +84,10 @@ namespace xlonlat
 		{
 		public:
 			static  const xGlobal& Instance();
+
 		private:
 			xGlobal();
-			xGlobal(const xGlobal&) = delete;
+			xGlobal(const xGlobal&){} //xGlobal(const xGlobal&) = delete; vs2010 not support "=delete"; 
 			static xGlobal& m_instance;
 		};
 
@@ -192,7 +186,7 @@ namespace xlonlat
 			~xViewer(void);
 
 			virtual void	 Initialize();
-			virtual void	 Render();
+			virtual void	 Render(double interval);
 			virtual void	 Clear();
 			virtual void	 Event(const xEvent& event);
 
