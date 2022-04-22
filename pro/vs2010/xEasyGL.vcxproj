@@ -18,15 +18,6 @@
       <Platform>x64</Platform>
     </ProjectConfiguration>
   </ItemGroup>
-  <ItemGroup>
-    <ClCompile Include="..\..\src\xDrawArgs.cpp" />
-    <ClCompile Include="..\..\src\xEasyGL.cpp" />
-    <ClCompile Include="..\..\src\xViewer.cpp" />
-    <ClCompile Include="..\..\src\xWindow.cpp" />
-  </ItemGroup>
-  <ItemGroup>
-    <ClInclude Include="..\..\src\xEasyGL.h" />
-  </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{0E9A9DC9-BB25-45CF-8039-03DF4122EAB4}</ProjectGuid>
     <RootNamespace>xEasyGL</RootNamespace>
@@ -36,7 +27,6 @@
     <ConfigurationType>DynamicLibrary</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
     <CharacterSet>MultiByte</CharacterSet>
-    <PlatformToolset>v100</PlatformToolset>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
     <ConfigurationType>DynamicLibrary</ConfigurationType>
@@ -59,8 +49,6 @@
     <PlatformToolset>v100</PlatformToolset>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
-  <ImportGroup Label="ExtensionSettings">
-  </ImportGroup>
   <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
   </ImportGroup>
@@ -94,14 +82,14 @@
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
-      <PreprocessorDefinitions>XEASYGL_PLATFORM_WINDOWS;XEASYGL_EXPORT_DLL;GLEW_STATIC;_MBCS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_DEBUG;XEASYGL_PLATFORM_WINDOWS;XEASYGL_EXPORT_DLL;GLEW_STATIC;WIN32;_MBCS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <AdditionalIncludeDirectories>$(SolutionDir)..\..\inc\</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalLibraryDirectories>$(SolutionDir)..\..\lib\$(Configuration)_$(Platform)\</AdditionalLibraryDirectories>
       <ImportLibrary>$(SolutionDir)../../lib/$(Configuration)_$(Platform)/$(TargetName).lib</ImportLibrary>
-      <AdditionalDependencies>glfw3.lib;glew32s.lib;opengl32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>glfw3.lib;glew.lib;opengl32.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <IgnoreSpecificDefaultLibraries>LIBCMT.lib</IgnoreSpecificDefaultLibraries>
     </Link>
     <PostBuildEvent>
@@ -112,7 +100,7 @@
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
-      <PreprocessorDefinitions>XEASYGL_PLATFORM_WINDOWS;XEASYGL_EXPORT_DLL;GLEW_STATIC;_MBCS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_DEBUG;XEASYGL_PLATFORM_WINDOWS;XEASYGL_EXPORT_DLL;GLEW_STATIC;_MBCS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <AdditionalIncludeDirectories>$(SolutionDir)..\..\inc\</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
@@ -132,7 +120,7 @@
       <Optimization>MaxSpeed</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
-      <PreprocessorDefinitions>XEASYGL_PLATFORM_WINDOWS;XEASYGL_EXPORT_DLL;GLEW_STATIC;_MBCS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>NDEBUG;XEASYGL_PLATFORM_WINDOWS;XEASYGL_EXPORT_DLL;GLEW_STATIC;WIN32;_MBCS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <AdditionalIncludeDirectories>$(SolutionDir)..\..\inc\</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
@@ -154,7 +142,7 @@
       <Optimization>MaxSpeed</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
-      <PreprocessorDefinitions>XEASYGL_PLATFORM_WINDOWS;XEASYGL_EXPORT_DLL;GLEW_STATIC;_MBCS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>NDEBUG;XEASYGL_PLATFORM_WINDOWS;XEASYGL_EXPORT_DLL;GLEW_STATIC;_MBCS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <AdditionalIncludeDirectories>$(SolutionDir)..\..\inc\</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
@@ -173,4 +161,13 @@
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>
+  <ItemGroup>
+    <ClCompile Include="..\..\src\xDrawArgs.cpp" />
+    <ClCompile Include="..\..\src\xEasyGL.cpp" />
+    <ClCompile Include="..\..\src\xViewer.cpp" />
+    <ClCompile Include="..\..\src\xWindow.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\src\xEasyGL.h" />
+  </ItemGroup>
 </Project>
