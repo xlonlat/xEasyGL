@@ -92,6 +92,8 @@ namespace xlonlat
 			xGlobal();
 			xGlobal(const xGlobal&){} //xGlobal(const xGlobal&) = delete; vs2010 not support "=delete"; 
 			static xGlobal& m_instance;
+
+			std::wstring	m_resourcePath;
 		};
 
 		class XEASYGL_API xMath
@@ -169,16 +171,18 @@ namespace xlonlat
 			xCamera();
 			virtual ~xCamera();
 
-			virtual void	Pan(int x, int y);
-			virtual void	Rotate() {}
-			virtual void	Zoom() {}
+			virtual void	Pan(int xoff, int yoff);
+			virtual void	Rotate(int xoff, int yoff);
+			virtual void	Zoom(int cx, int cy, bool zoomin);
 
+			void  Update();	// Called by render process.
 			void  Link(const xViewer* viewer);
 			void  State(const xCameraState& state);
 
 			const xCameraState& State() { return m_state; }
 		protected:
 			xCameraState		m_state;
+			xCameraState		m_stateBak;
 			const xViewer*		m_viewer;
 		};
 
@@ -188,16 +192,24 @@ namespace xlonlat
 			xViewer(xCamera* camera = nullptr);
 			~xViewer(void);
 
+			xDrawArgs& DrawArgs() const;
+
 			virtual void	 Initialize();
 			virtual void	 Render(double interval);
 			virtual void	 Clear();
 			virtual void	 Event(const xEvent& event);
 
-			const xDrawArgs& DrawArgs() const;
+			virtual void	 OnLButtonUp(int cx, int cy) override;
+			virtual void	 OnRButtonUp(int cx, int cy) override;
+			virtual void	 OnMouseMove(int cx, int cy, int button) override;
+			virtual void	 OnMouseWheel(int cx, int cy, bool zoomin) override;
 
 		protected:
 			xCamera*	m_camera;
 			xDrawArgs*	m_drawArgs;
+			glm::ivec2   m_lastLDown;
+			glm::ivec2   m_lastRDown;
+
 			void		Begin2D();
 			void		Begin3D();
 		};
