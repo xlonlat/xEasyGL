@@ -18,6 +18,11 @@ namespace xlonlat
 			return m_instance;
 		}
 
+		const std::wstring& xGlobal::ResourcePath()
+		{
+			return L"";
+		}
+
 		xCamera::xCamera() : m_viewer(nullptr)
 		{
 		}
@@ -25,6 +30,10 @@ namespace xlonlat
 		xCamera::~xCamera()
 		{
 			m_viewer = nullptr;
+		}
+
+		void xCamera::Pan(int x, int y)
+		{
 		}
 
 		void xCamera::Link(const xViewer* viewer)

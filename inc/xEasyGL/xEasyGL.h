@@ -16,6 +16,7 @@
 
 #include <iostream>
 #include <iomanip>
+#include <string>
 
 #include <GLEW/GL/glew.h>
 #include <GLFW/glfw3.h>
@@ -84,6 +85,8 @@ namespace xlonlat
 		{
 		public:
 			static  const xGlobal& Instance();
+
+			const std::wstring& ResourcePath();
 
 		private:
 			xGlobal();
@@ -166,7 +169,7 @@ namespace xlonlat
 			xCamera();
 			virtual ~xCamera();
 
-			virtual void	Pan() {}
+			virtual void	Pan(int x, int y);
 			virtual void	Rotate() {}
 			virtual void	Zoom() {}
 
