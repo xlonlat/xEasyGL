@@ -48,36 +48,42 @@ namespace xlonlat
 		// type==KeyDown	: key value, same as GLFW;
 		// type==KeyUp		: key value, same as GLFW;
 		// -------------------------------------------------------
-		typedef struct
+		struct xEvent
 		{
 			xEventType	type;
 			int			x;
 			int			y;
 			int			val; 
-		} xEvent;
+		};
 
-		typedef struct
+		struct xViewportState
 		{
 			int x;
 			int y;
 			int w;
 			int h;
-		} xViewportState;
+		};
 
-		typedef struct
+		struct xProjState
 		{
 			float zNear;
 			float zFar;
 			float fovy;
 			float aspect;
-		} xProjState;
+		};
 
-		typedef struct
+		struct xCameraState
 		{
 			glm::vec3	pos;
 			glm::vec3	lookAt;
 			glm::vec3	up;
-		} xCameraState;
+		};
+
+		struct xMousePos
+		{
+			int x;
+			int y;
+		};
 
 		class xViewer;
 
@@ -86,14 +92,14 @@ namespace xlonlat
 		public:
 			static  const xGlobal& Instance();
 
-			const std::wstring& ResourcePath();
+			const	wchar_t* ResourcePath();
 
 		private:
 			xGlobal();
-			xGlobal(const xGlobal&){} //xGlobal(const xGlobal&) = delete; vs2010 not support "=delete"; 
+			xGlobal(const xGlobal&); //xGlobal(const xGlobal&) = delete; vs2010 not support "=delete"; 
 			static xGlobal& m_instance;
 
-			std::wstring	m_resourcePath;
+			wchar_t	m_resourcePath[1024];
 		};
 
 		class XEASYGL_API xMath
@@ -171,6 +177,10 @@ namespace xlonlat
 			xCamera();
 			virtual ~xCamera();
 
+			virtual void	Pan(xMousePos pos0, xMousePos pos1, int param = 0) {}
+			virtual void	Rotate(xMousePos pos0, xMousePos pos1, int param = 0) {}
+			virtual void	Zoom(xMousePos pos0, xMousePos pos1, bool zoomin, int param = 0) {}
+
 			virtual void	Pan(int xoff, int yoff);
 			virtual void	Rotate(int xoff, int yoff);
 			virtual void	Zoom(int cx, int cy, bool zoomin);
@@ -207,8 +217,8 @@ namespace xlonlat
 		protected:
 			xCamera*	m_camera;
 			xDrawArgs*	m_drawArgs;
-			glm::ivec2   m_lastLDown;
-			glm::ivec2   m_lastRDown;
+			xMousePos   m_lastLDown;
+			xMousePos   m_lastRDown;
 
 			void		Begin2D();
 			void		Begin3D();
@@ -227,6 +237,5 @@ namespace xlonlat
 		};
 	}
 }
-
 
 #endif // _XEASYGL_H_

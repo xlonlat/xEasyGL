@@ -29,8 +29,8 @@ namespace xlonlat
 			m_camera->Link(this);
 			m_camera->State(cam);
 
-			m_lastLDown = glm::ivec2(-1, -1);
-			m_lastRDown = glm::ivec2(-1, -1);
+			m_lastLDown.x = m_lastLDown.y = -1;
+			m_lastRDown.x = m_lastRDown.y = -1;
 		}
 
 		xViewer::~xViewer(void)
@@ -118,12 +118,12 @@ namespace xlonlat
 
 		void xViewer::OnLButtonUp(int cx, int cy)
 		{
-			m_lastLDown = glm::ivec2(-1, -1);
+			m_lastLDown.x = m_lastLDown.y = -1;
 		}
 
 		void xViewer::OnRButtonUp(int cx, int cy)
 		{
-			m_lastRDown = glm::ivec2(-1, -1);
+			m_lastRDown.x = m_lastRDown.y = -1;
 		}
 
 		void xViewer::OnMouseMove(int cx, int cy, int button)
@@ -131,20 +131,28 @@ namespace xlonlat
 			if (button == 0)	// Left button.
 			{
 				if (m_lastLDown.x == -1 && m_lastLDown.y == -1)
-					m_lastLDown = glm::ivec2(cx, cy);
+				{
+					m_lastLDown.x = cx;
+					m_lastLDown.y = cy;
+				}
 
 				m_camera->Pan(cx - m_lastLDown.x, cy - m_lastLDown.y);
 
-				m_lastLDown = glm::ivec2(cx, cy);
+				m_lastLDown.x = cx;
+				m_lastLDown.y = cy;
 			}
 			else if (button == 1)	// Right button.
 			{
 				if (m_lastRDown.x == -1 && m_lastRDown.y == -1)
-					m_lastRDown = glm::ivec2(cx, cy);
+				{
+					m_lastRDown.x = cx;
+					m_lastRDown.y = cy;
+				}
 
 				m_camera->Rotate(cx - m_lastRDown.x, cy - m_lastRDown.y);
 
-				m_lastRDown = glm::ivec2(cx, cy);
+				m_lastRDown.x = cx;
+				m_lastRDown.y = cy;
 			}
 		}
 

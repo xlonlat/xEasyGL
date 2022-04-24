@@ -12,7 +12,12 @@ namespace xlonlat
 			char* aaa = (char*)(new char[4]);
 			char* bbb = (char*)malloc(4);
 
-			m_resourcePath = L"";
+			memset(m_resourcePath, 0, sizeof(m_resourcePath));
+		}
+
+		xGlobal::xGlobal(const xGlobal&)
+		{
+			memset(m_resourcePath, 0, sizeof(m_resourcePath));
 		}
 
 		const xGlobal& xGlobal::Instance()
@@ -20,7 +25,7 @@ namespace xlonlat
 			return m_instance;
 		}
 
-		const std::wstring& xGlobal::ResourcePath()
+		const wchar_t* xGlobal::ResourcePath()
 		{
 			return m_resourcePath;
 		}
@@ -141,6 +146,7 @@ namespace xlonlat
 
 			xProjState ps = args.ps();
 			ps.zFar = fabs(m_stateBak.pos.z * 1.01f);
+			if (ps.zFar < 1000) ps.zFar = 1000;
 			ps.zNear = ps.zFar * 0.001f;
 			args.ps(ps);
 		}
