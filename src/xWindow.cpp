@@ -9,7 +9,7 @@ namespace xlonlat
             xViewer* viewer = (xViewer*)glfwGetWindowUserPointer(window);
             assert(viewer != nullptr);
 
-            xEvent event;
+            xEvent event{};
             event.type = xEasyGL::Resize;
             event.x = width;
             event.y = height;
@@ -34,24 +34,28 @@ namespace xlonlat
 			if (button == GLFW_MOUSE_BUTTON_RIGHT)  btn = 1;
 			if (button == GLFW_MOUSE_BUTTON_MIDDLE) btn = 2;
 
-            xEvent event;
+            xEvent event{};
             event.type = action == GLFW_RELEASE ? xEasyGL::MouseUp : xEasyGL::MouseDown;
             event.x = (int)x;
             event.y = (int)y;
             event.val = btn;
+
+            xMousePos mouse{};
+            mouse.x = (int)x;
+            mouse.y = (int)y;
 
             viewer->Event(event);
             switch (event.type)
             {
             case xEasyGL::MouseUp:
             {
-                     if (btn == 0) viewer->OnLButtonUp((int)x, (int)y);
-                else if (btn == 1) viewer->OnRButtonUp((int)x, (int)y);
+                     if (btn == 0) viewer->OnLButtonUp(mouse);
+                else if (btn == 1) viewer->OnRButtonUp(mouse);
             }break;
             case xEasyGL::MouseDown:
             {
-                     if (btn == 0) viewer->OnLButtonDown((int)x, (int)y);
-                else if (btn == 1) viewer->OnRButtonDown((int)x, (int)y);
+                     if (btn == 0) viewer->OnLButtonDown(mouse);
+                else if (btn == 1) viewer->OnRButtonDown(mouse);
             }break;
             default:
                 break;
@@ -68,14 +72,18 @@ namespace xlonlat
             if (glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_RIGHT)  == 1) btn = 1;
             if (glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_MIDDLE) == 1) btn = 2;
 
-            xEvent event;
+            xEvent event{};
             event.type = xEasyGL::MouseMove;
             event.x = (int)x;
             event.y = (int)y;
             event.val = btn;
 
+            xMousePos mouse{};
+            mouse.x = (int)x;
+            mouse.y = (int)y;
+
             viewer->Event(event);
-            viewer->OnMouseMove((int)x, (int)y, btn);
+            viewer->OnMouseMove(mouse, btn);
         }
 
          // @param[yoff] 1:zoomin | -1:zoomout.
@@ -87,14 +95,18 @@ namespace xlonlat
             double x = 0, y = 0;
             glfwGetCursorPos(window, &x, &y);
 
-            xEvent event;
+            xEvent event{};
             event.type = xEasyGL::MouseWheel;
             event.x = (int)x;
             event.y = (int)y;
             event.val = yoff > 0 ? 1 : 0;
 
+            xMousePos mouse{};
+            mouse.x = (int)x;
+            mouse.y = (int)y;
+
             viewer->Event(event);
-            viewer->OnMouseWheel((int)x, (int)y, yoff > 0);
+            viewer->OnMouseWheel(mouse, yoff > 0);
         }
 
 		void OnKeyEvent(GLFWwindow* window, int key, int scancode, int action, int mode)
@@ -110,7 +122,7 @@ namespace xlonlat
 
 			if (action == GLFW_PRESS || action == GLFW_RELEASE)
 			{
-				xEvent event;
+                xEvent event{};
 				event.type = action == GLFW_PRESS ? xEasyGL::KeyDown : xEasyGL::KeyUp;
 				event.x = (int)x;
 				event.y = (int)y;

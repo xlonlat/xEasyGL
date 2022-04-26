@@ -6,19 +6,19 @@ namespace xlonlat
 	{
 		xViewer::xViewer(xCamera* camera/* = nullptr */)
 		{
-			xViewportState vs;
+			xViewportState vs{};
 			vs.x = 0;
 			vs.y = 0;
 			vs.w = 1280;
 			vs.h = 720;
 
-			xProjState ps;
+			xProjState ps{};
 			ps.zNear = 0.1f;
 			ps.zFar = 1000.0f;
 			ps.fovy = 45.0f;
 			ps.aspect = 1.0f * vs.w / vs.h;
 
-			xCameraState cam;
+			xCameraState cam{};
 			cam.pos = glm::vec3(0.f, 0.f, 300.f);
 			cam.lookAt = glm::vec3(0.f, 0.f, 0.f);
 			cam.up = glm::vec3(0.f, 1.f, 0.f);
@@ -116,49 +116,45 @@ namespace xlonlat
 			}
 		}
 
-		void xViewer::OnLButtonUp(int cx, int cy)
+		void xViewer::OnLButtonUp(const xMousePos& pos)
 		{
 			m_lastLDown.x = m_lastLDown.y = -1;
 		}
 
-		void xViewer::OnRButtonUp(int cx, int cy)
+		void xViewer::OnRButtonUp(const xMousePos& pos)
 		{
 			m_lastRDown.x = m_lastRDown.y = -1;
 		}
 
-		void xViewer::OnMouseMove(int cx, int cy, int button)
+		void xViewer::OnMouseMove(const xMousePos& pos, int button)
 		{
 			if (button == 0)	// Left button.
 			{
 				if (m_lastLDown.x == -1 && m_lastLDown.y == -1)
 				{
-					m_lastLDown.x = cx;
-					m_lastLDown.y = cy;
+					m_lastLDown = pos;
 				}
 
-				m_camera->Pan(cx - m_lastLDown.x, cy - m_lastLDown.y);
+				m_camera->Pan(m_lastLDown, pos);
 
-				m_lastLDown.x = cx;
-				m_lastLDown.y = cy;
+				m_lastLDown = pos;
 			}
 			else if (button == 1)	// Right button.
 			{
 				if (m_lastRDown.x == -1 && m_lastRDown.y == -1)
 				{
-					m_lastRDown.x = cx;
-					m_lastRDown.y = cy;
+					m_lastRDown = pos;
 				}
 
-				m_camera->Rotate(cx - m_lastRDown.x, cy - m_lastRDown.y);
+				m_camera->Rotate(m_lastRDown, pos);
 
-				m_lastRDown.x = cx;
-				m_lastRDown.y = cy;
+				m_lastRDown = pos;
 			}
 		}
 
-		void xViewer::OnMouseWheel(int cx, int cy, bool zoomin)
+		void xViewer::OnMouseWheel(const xMousePos& pos, bool zoomin)
 		{
-			m_camera->Zoom(cx, cy, zoomin);
+			m_camera->Zoom(pos, zoomin);
 		}
 
 		void xViewer::Begin2D()

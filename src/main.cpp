@@ -33,34 +33,34 @@ public:
 #endif // _DEBUG
     }
 
-	virtual void OnLButtonDown(int cx, int cy) override
+	virtual void OnLButtonDown(const xMousePos& pos) override
 	{
-		std::cout << "OnLButtonDown:" << cx << "," << cy << std::endl;
+		std::cout << "OnLButtonDown:" << pos.x << "," << pos.y << std::endl;
 	}
 
-	virtual void OnRButtonDown(int cx, int cy) override
+	virtual void OnRButtonDown(const xMousePos& pos) override
 	{
-		std::cout << "OnRButtonDown:" << cx << "," << cy << std::endl;
+		std::cout << "OnRButtonDown:" << pos.x << "," << pos.y << std::endl;
 	}
 
-	virtual void OnLButtonUp(int cx, int cy) override
+	virtual void OnLButtonUp(const xMousePos& pos) override
 	{
-		std::cout << "OnLButtonUp:" << cx << "," << cy << std::endl;
+		std::cout << "OnLButtonUp:" << pos.x << "," << pos.y << std::endl;
 	}
 
-	virtual void OnRButtonUp(int cx, int cy) override
+	virtual void OnRButtonUp(const xMousePos& pos) override
 	{
-		std::cout << "OnRButtonUp:" << cx << "," << cy << std::endl;
+		std::cout << "OnRButtonUp:" << pos.x << "," << pos.y << std::endl;
 	}
 
-	virtual void OnMouseMove(int cx, int cy, int button) override
+	virtual void OnMouseMove(const xMousePos& pos, int button) override
 	{
-		std::cout << "OnMouseMove:" << cx << "," << cy << ",button=" << button << std::endl;
+		std::cout << "OnMouseMove:" << pos.x << "," << pos.y << ",button=" << button << std::endl;
 	}
 
-	virtual void OnMouseWheel(int cx, int cy, bool zoomin) override
+	virtual void OnMouseWheel(const xMousePos& pos, bool zoomin) override
 	{
-		std::cout << "OnMouseWheel:" << cx << "," << cy << ",zoomin=" << zoomin << std::endl;
+		std::cout << "OnMouseWheel:" << pos.x << "," << pos.y << ",zoomin=" << zoomin << std::endl;
 	}
 
 	virtual void OnKeyDown(int key) override

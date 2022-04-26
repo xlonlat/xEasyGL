@@ -135,12 +135,12 @@ namespace xlonlat
 		class XEASYGL_API xEventParser
 		{
 		public :
-			virtual void OnLButtonUp(int cx, int cy){}
-			virtual void OnRButtonUp(int cx, int cy){}
-			virtual void OnLButtonDown(int cx, int cy){}
-			virtual void OnRButtonDown(int cx, int cy){}
-			virtual void OnMouseMove(int cx, int cy, int button) {}
-			virtual void OnMouseWheel(int cx, int cy, bool zoomin) {}
+			virtual void OnLButtonUp(const xMousePos& pos){}
+			virtual void OnRButtonUp(const xMousePos& pos){}
+			virtual void OnLButtonDown(const xMousePos& pos){}
+			virtual void OnRButtonDown(const xMousePos& pos){}
+			virtual void OnMouseMove(const xMousePos& pos, int button) {}
+			virtual void OnMouseWheel(const xMousePos& pos, bool zoomin) {}
 			virtual void OnSize(int cx, int cy) {}
 			virtual void OnKeyUp(int key) {}
 			virtual void OnKeyDown(int key) {}
@@ -177,13 +177,9 @@ namespace xlonlat
 			xCamera();
 			virtual ~xCamera();
 
-			virtual void	Pan(xMousePos pos0, xMousePos pos1, int param = 0) {}
-			virtual void	Rotate(xMousePos pos0, xMousePos pos1, int param = 0) {}
-			virtual void	Zoom(xMousePos pos0, xMousePos pos1, bool zoomin, int param = 0) {}
-
-			virtual void	Pan(int xoff, int yoff);
-			virtual void	Rotate(int xoff, int yoff);
-			virtual void	Zoom(int cx, int cy, bool zoomin);
+			virtual void	Pan(const xMousePos& pos0, const xMousePos& pos1, int param = 0);
+			virtual void	Rotate(const xMousePos& pos0, const xMousePos& pos1, int param = 0);
+			virtual void	Zoom(const xMousePos& pos, bool zoomin, int param = 0);
 
 			void  Update();	// Called by render process.
 			void  Link(const xViewer* viewer);
@@ -209,10 +205,10 @@ namespace xlonlat
 			virtual void	 Clear();
 			virtual void	 Event(const xEvent& event);
 
-			virtual void	 OnLButtonUp(int cx, int cy) override;
-			virtual void	 OnRButtonUp(int cx, int cy) override;
-			virtual void	 OnMouseMove(int cx, int cy, int button) override;
-			virtual void	 OnMouseWheel(int cx, int cy, bool zoomin) override;
+			virtual void	 OnLButtonUp(const xMousePos& pos) override;
+			virtual void	 OnRButtonUp(const xMousePos& pos) override;
+			virtual void	 OnMouseMove(const xMousePos& pos, int button) override;
+			virtual void	 OnMouseWheel(const xMousePos& pos, bool zoomin) override;
 
 		protected:
 			xCamera*	m_camera;

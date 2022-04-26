@@ -167,6 +167,7 @@
     <ClInclude Include="..\..\src\xEasyGL.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="..\..\src\xCamera.cpp" />
     <ClCompile Include="..\..\src\xDrawArgs.cpp" />
     <ClCompile Include="..\..\src\xEasyGL.cpp" />
     <ClCompile Include="..\..\src\xViewer.cpp" />
