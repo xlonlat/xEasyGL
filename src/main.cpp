@@ -76,6 +76,19 @@ public:
 
 int main()
 {
+	std::wcout.imbue(std::locale("chs"));
+
+	// Test image.
+	{
+		const std::wstring& img = xGlobal::Instance().ResourcePath() + L"images\\opengl_logo.jpeg";
+		int w = 0, h = 0, c = 0;
+		unsigned char* data = xGlobal::Instance().ReadImage(img, w, h, c);
+		if (data)
+		{
+			free(data);
+		}
+	}
+
     xWindow window(new xViewer);
     window.Run();
 

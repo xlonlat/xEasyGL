@@ -11,12 +11,12 @@ tmp/glew/
 tmp/glfw/
 tmp/xApp/
 tmp/xEasyGL/
-pro/vs2012/
-pro/vs2013/
-pro/vs2015/
-pro/vs2017/
-pro/vs2019/
-pro/vs2022/
+prj/vs2012/
+prj/vs2013/
+prj/vs2015/
+prj/vs2017/
+prj/vs2019/
+prj/vs2022/
 
 # Files
 *.opensdf

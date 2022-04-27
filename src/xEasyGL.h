@@ -10,6 +10,10 @@
 #define XEASYGL_API __declspec(dllimport)
 #endif // XEASYGL_EXPORT_DLL
 
+#ifdef _DEBUG
+#define new  new(_NORMAL_BLOCK, __FILE__, __LINE__)
+#endif
+
 #else
 #error "xEasyGL only support Windows!"
 #endif // XEASYGL_PLATFORM_WINDOWS
@@ -90,9 +94,11 @@ namespace xlonlat
 		class XEASYGL_API xGlobal
 		{
 		public:
-			static  const xGlobal& Instance();
+			static  const xGlobal&	Instance();
 
-			const	wchar_t* ResourcePath();
+			const	std::wstring&	ResourcePath() const;
+
+			unsigned char*			ReadImage(const std::wstring& file, int& width, int& height, int& channel) const;
 
 		private:
 			xGlobal();
