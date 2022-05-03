@@ -22,9 +22,12 @@
 #error "xEasyGL only support Windows!"
 #endif // XEASYGL_PLATFORM_WINDOWS
 
+#include <codecvt> 
+#include <fstream>
 #include <iostream>
 #include <iomanip>
 #include <string>
+#include <sstream>
 
 #include <GLEW/GL/glew.h>
 #include <GLFW/glfw3.h>
@@ -140,6 +143,26 @@ namespace xlonlat
 			}
 		};
 
+		class XEASYGL_API xShader
+		{
+		public:
+			xShader();
+			~xShader();
+
+			void	Clear();
+			bool	Load(const wchar_t* vs_file, const wchar_t* fs_file);
+			bool	Load(const char* vs_code, const char* fs_code);
+			void	GetInfo(char info[512]) const;
+			void	Enable()	const;
+			void	Disable()	const;
+
+			GLuint	ID()	const;
+		private:
+			GLuint	m_id;
+			GLuint	m_vs;
+			GLuint	m_fs;
+		};
+
 		class XEASYGL_API xTexture
 		{
 		public:
@@ -233,6 +256,11 @@ namespace xlonlat
 			virtual void	Zoom(const xMousePos& pos, bool zoomin, int param = 0) override;
 		};
 
+		class XEASYGL_API xTrackballCamera
+		{
+
+		};
+
 		class XEASYGL_API xViewer : public xEventParser
 		{
 		public:
@@ -242,7 +270,7 @@ namespace xlonlat
 			xDrawArgs& DrawArgs() const;
 
 			virtual void	 Initialize();
-			virtual void	 Render(double interval);
+			virtual void	 Render();
 			virtual void	 Clear();
 			virtual void	 Event(const xEvent& event);
 
@@ -257,6 +285,7 @@ namespace xlonlat
 			xMousePos   m_lastLDown;
 			xMousePos   m_lastRDown;
 			xTexture	m_logoImg;
+			xShader		m_sampleShader;
 
 			void		Begin2D();
 			void		Begin3D();
@@ -275,5 +304,4 @@ namespace xlonlat
 		};
 	}
 }
-
 #endif // _XEASYGL_H_

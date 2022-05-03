@@ -170,6 +170,7 @@
     <ClCompile Include="..\..\src\xCamera.cpp" />
     <ClCompile Include="..\..\src\xDrawArgs.cpp" />
     <ClCompile Include="..\..\src\xEasyGL.cpp" />
+    <ClCompile Include="..\..\src\xShader.cpp" />
     <ClCompile Include="..\..\src\xTexture.cpp" />
     <ClCompile Include="..\..\src\xViewer.cpp" />
     <ClCompile Include="..\..\src\xWindow.cpp" />

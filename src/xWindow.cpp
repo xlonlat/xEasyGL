@@ -143,7 +143,6 @@ namespace xlonlat
 
 		xWindow::~xWindow()
 		{
-
 		}
 
 		void xWindow::Run()
@@ -180,32 +179,38 @@ namespace xlonlat
                 glewInit();
             }
 
-            m_viewer->Initialize();
+            if (m_viewer)
+            {
+                m_viewer->Initialize();
+            }
 
-			double deltaTime = 0.0, currFrame = 0.0, lastFrame = 0.0;
             while (!glfwWindowShouldClose(m_window))
             {
-				currFrame = glfwGetTime();
-				if (lastFrame == 0.0) lastFrame = currFrame;
-				deltaTime = currFrame - lastFrame;
-				lastFrame = currFrame;
-
                 if (glfwGetKey(m_window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
                     glfwSetWindowShouldClose(m_window, true);
 
-                m_viewer->Render(deltaTime);
+                if (m_viewer)
+                {
+                    m_viewer->Render();
+                }
 
                 glfwSwapBuffers(m_window);
                 glfwPollEvents();
             }
 
-            m_viewer->Clear();
+            if (m_viewer)
+            {
+                m_viewer->Clear();
+            }
 
             glfwTerminate();
-
-            delete m_viewer;
-            m_viewer = nullptr;
             m_window = nullptr;
+
+            if (m_viewer)
+            {
+                delete m_viewer;
+                m_viewer = nullptr;
+            }
 		}
 	}
 }

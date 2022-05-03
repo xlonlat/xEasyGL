@@ -48,9 +48,13 @@ namespace xlonlat
 		{
 			const std::wstring& img = std::wstring(xGlobal::Instance().ResourcePath()) + L"images\\opengl_logo.jpeg";
 			m_logoImg.Load(img.c_str());
+
+			const std::wstring& vs_file = std::wstring(xGlobal::Instance().ResourcePath()) + L"shaders\\sample.vs";
+			const std::wstring& fs_file = std::wstring(xGlobal::Instance().ResourcePath()) + L"shaders\\sample.fs";
+			m_sampleShader.Load(vs_file.c_str(), fs_file.c_str());
 		}
 
-		void xViewer::Render(double interval)
+		void xViewer::Render()
 		{
 			m_camera->Update();
 
@@ -95,6 +99,7 @@ namespace xlonlat
 
 			Begin3D();
 			{
+				m_sampleShader.Enable();
 				glPushMatrix();
 				glScaled(10.0, 10.0, 10.0);
 				glBegin(GL_TRIANGLES);
@@ -103,6 +108,7 @@ namespace xlonlat
 				glColor3f(0.0f, 0.0f, 1.0f); glVertex3f( 1.0f, -1.0f, 0.0f);
 				glEnd();
 				glPopMatrix();
+				m_sampleShader.Disable();
 
 				glBegin(GL_LINES);
 				for (int i=-100; i<=100; i+=2)
@@ -119,6 +125,7 @@ namespace xlonlat
 
 		void xViewer::Clear()
 		{
+			m_sampleShader.Clear();
 			m_logoImg.Clear();
 		}
 

@@ -8,7 +8,7 @@ class ViewerPro : public xViewer
 public:
 	virtual ~ViewerPro() {}
 
-	virtual void Render(double interval) override
+	virtual void Render() override
     {
 		float width = (float)(m_drawArgs->vs().w);
 		float height = (float)(m_drawArgs->vs().h);
@@ -78,19 +78,10 @@ int main()
 {
 	std::wcout.imbue(std::locale("chs"));
 
-	// Test image.
 	{
-		const std::wstring& img = std::wstring(xGlobal::Instance().ResourcePath()) + L"images\\opengl_logo.jpeg";
-		int w = 0, h = 0, c = 0;
-		unsigned char* data = xGlobal::Instance().ReadImage(img.c_str(), w, h, c);
-		if (data)
-		{
-			free(data);
-		}
+		xWindow window(new xViewer);
+		window.Run();
 	}
-
-    xWindow window(new xViewer);
-    window.Run();
 
     _CrtDumpMemoryLeaks();
     return 0;
