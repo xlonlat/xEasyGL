@@ -40,16 +40,16 @@ namespace xlonlat
 			return m_instance;
 		}
 
-		const std::wstring& xGlobal::ResourcePath() const
+		const wchar_t* xGlobal::ResourcePath() const
 		{
-			return std::wstring(m_resourcePath);
+			return m_resourcePath;
 		}
 
-		unsigned char* xGlobal::ReadImage(const std::wstring& file, int& width, int& height, int& channel) const
+		unsigned char* xGlobal::ReadImage(const wchar_t* file, int& width, int& height, int& channel) const
 		{
-			int len = WideCharToMultiByte(CP_ACP, 0, file.c_str(), wcslen(file.c_str()), NULL, 0, NULL, NULL);
+			int len = WideCharToMultiByte(CP_ACP, 0, file, (int)wcslen(file), NULL, 0, NULL, NULL);
 			char* achar = new char[len + 1];
-			WideCharToMultiByte(CP_ACP, 0, file.c_str(), wcslen(file.c_str()), achar, len, NULL, NULL);
+			WideCharToMultiByte(CP_ACP, 0, file, (int)wcslen(file), achar, len, NULL, NULL);
 			achar[len] = '\0';
 			unsigned char* data = stbi_load(achar, &width, &height, &channel, 0);
 			delete[] achar;

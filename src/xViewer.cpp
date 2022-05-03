@@ -4,7 +4,7 @@ namespace xlonlat
 {
 	namespace xEasyGL
 	{
-		xViewer::xViewer(xCamera* camera/* = nullptr */)
+		xViewer::xViewer(xFirstPersonCamera* camera/* = nullptr */)
 		{
 			xViewportState vs{};
 			vs.x = 0;
@@ -25,7 +25,7 @@ namespace xlonlat
 
 			m_drawArgs = new xDrawArgs(vs, ps);
 
-			camera == nullptr ? m_camera = new xCamera() : m_camera = camera;
+			camera == nullptr ? m_camera = new xFirstPersonCamera() : m_camera = camera;
 			m_camera->Link(this);
 			m_camera->State(cam);
 
@@ -46,11 +46,16 @@ namespace xlonlat
 
 		void xViewer::Initialize()
 		{
+			const std::wstring& img = std::wstring(xGlobal::Instance().ResourcePath()) + L"images\\opengl_logo.jpeg";
+			m_logoImg.Load(img.c_str());
 		}
 
 		void xViewer::Render(double interval)
 		{
 			m_camera->Update();
+
+			int width = (int)m_drawArgs->vs().w;
+			int height = (int)m_drawArgs->vs().h;
 
 			glClearDepth(1.0f);
 			glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
@@ -60,11 +65,32 @@ namespace xlonlat
 
 			Begin2D();
 			{
-				glBegin(GL_TRIANGLES);
-				glColor3f(1.0f, 0.0f, 0.0f); glVertex3f(100.0f,   0.0f, 0.0f);
-				glColor3f(0.0f, 1.0f, 0.0f); glVertex3f(  0.0f, 100.0f, 0.0f);
-				glColor3f(0.0f, 0.0f, 1.0f); glVertex3f(200.0f, 100.0f, 0.0f);
+				glColor4d(0.0, 1.0, 0.0, 1.0);
+				glBegin(GL_LINES);
+				glVertex2f(width / 2.f - 10.f, height / 2.f);
+				glVertex2f(width / 2.f + 10.f, height / 2.f);
+				glVertex2f(width / 2.f, height / 2.f - 10.f);
+				glVertex2f(width / 2.f, height / 2.f + 10.f);
 				glEnd();
+
+				if (m_logoImg.Available())
+				{
+					float img_w = 128.f;
+					float img_h = img_w * m_logoImg.Height() / m_logoImg.Width();
+					float pos_x = width - img_w - 10.f;
+					float pos_y = height - img_h - 10.f;
+					glEnable(GL_TEXTURE_2D);
+					glBindTexture(GL_TEXTURE_2D, m_logoImg.ID());
+					glFrontFace(GL_CCW);
+					glColor4d(1.0, 1.0, 1.0, 1.0);
+					glBegin(GL_QUADS);
+					glTexCoord2f(0.0f, 0.0f); glVertex2f(pos_x + 0.0f,  pos_y + 0.0f);
+					glTexCoord2f(0.0f, 1.0f); glVertex2f(pos_x + 0.0f,  pos_y + img_h);
+					glTexCoord2f(1.0f, 1.0f); glVertex2f(pos_x + img_w, pos_y + img_h);
+					glTexCoord2f(1.0f, 0.0f); glVertex2f(pos_x + img_w, pos_y + 0.0f);
+					glEnd();
+					glDisable(GL_TEXTURE_2D);
+				}
 			}
 
 			Begin3D();
@@ -88,12 +114,12 @@ namespace xlonlat
 					glColor3f(0.4f, 0.4f, 0.4f); glVertex3f(-100.0f, i * 1.0f, 0.0f);
 				}
 				glEnd();
-
 			}
 		}
 
 		void xViewer::Clear()
 		{
+			m_logoImg.Clear();
 		}
 
 		void xViewer::Event(const xEvent& event)
@@ -161,7 +187,7 @@ namespace xlonlat
 		{
 			const xViewportState& vs = m_drawArgs->vs();
 
-			// Set viewport .
+			// Set viewport.
 			glViewport(0, 0, vs.w, vs.h);
 
 			// Set projection matrix.

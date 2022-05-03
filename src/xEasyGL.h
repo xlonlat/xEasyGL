@@ -10,6 +10,10 @@
 #define XEASYGL_API __declspec(dllimport)
 #endif // XEASYGL_EXPORT_DLL
 
+#ifndef _CRT_SECURE_NO_WARNINGS
+#define _CRT_SECURE_NO_WARNINGS
+#endif // _CRT_SECURE_NO_WARNINGS
+
 #ifdef _DEBUG
 #define new  new(_NORMAL_BLOCK, __FILE__, __LINE__)
 #endif
@@ -94,11 +98,9 @@ namespace xlonlat
 		class XEASYGL_API xGlobal
 		{
 		public:
-			static  const xGlobal&	Instance();
-
-			const	std::wstring&	ResourcePath() const;
-
-			unsigned char*			ReadImage(const std::wstring& file, int& width, int& height, int& channel) const;
+			static   const xGlobal&	Instance();
+			const	 wchar_t*		ResourcePath() const;
+			unsigned char*			ReadImage(const wchar_t* file, int& width, int& height, int& channel) const;
 
 		private:
 			xGlobal();
@@ -136,6 +138,28 @@ namespace xlonlat
 			{
 				PrintMatrix4x4T<double>(mat);
 			}
+		};
+
+		class XEASYGL_API xTexture
+		{
+		public:
+			xTexture();
+			~xTexture();
+
+			void	Clear();										// Called by render process.
+			bool	Load(const wchar_t* file);						// Called by render process.
+			void	Load(const unsigned char* data, GLenum format);	// Called by render process.
+
+			GLuint	ID()		const;
+			size_t	Width()		const;
+			size_t	Height()	const;
+			size_t	Channel()	const;
+			bool	Available()	const;
+		private:
+			GLuint	m_id;
+			int		m_width;
+			int		m_height;
+			int		m_channel;
 		};
 
 		class XEASYGL_API xEventParser
@@ -177,31 +201,42 @@ namespace xlonlat
 			virtual void	Draw3D(const xDrawArgs& args) = 0;
 		};
 
-		class XEASYGL_API xCamera
+		class XEASYGL_API xICamera
 		{
 		public:
-			xCamera();
-			virtual ~xCamera();
+			xICamera();
+			virtual ~xICamera();
 
-			virtual void	Pan(const xMousePos& pos0, const xMousePos& pos1, int param = 0);
-			virtual void	Rotate(const xMousePos& pos0, const xMousePos& pos1, int param = 0);
-			virtual void	Zoom(const xMousePos& pos, bool zoomin, int param = 0);
+			void	Update();	// Called by render process.
+			void	Link(const xViewer* viewer);
+			void	State(const xCameraState& state);
 
-			void  Update();	// Called by render process.
-			void  Link(const xViewer* viewer);
-			void  State(const xCameraState& state);
+			virtual void	Pan(const xMousePos& pos0, const xMousePos& pos1, int param = 0) = 0;
+			virtual void	Rotate(const xMousePos& pos0, const xMousePos& pos1, int param = 0) = 0;
+			virtual void	Zoom(const xMousePos& pos, bool zoomin, int param = 0) = 0;
 
 			const xCameraState& State() { return m_state; }
 		protected:
-			xCameraState		m_state;
-			xCameraState		m_stateBak;
-			const xViewer*		m_viewer;
+			xCameraState	m_state;
+			xCameraState	m_statePre;
+			const xViewer*	m_viewer;
+		};
+
+		class XEASYGL_API xFirstPersonCamera : public xICamera
+		{
+		public:
+			xFirstPersonCamera();
+			virtual ~xFirstPersonCamera();
+
+			virtual void	Pan(const xMousePos& pos0, const xMousePos& pos1, int param = 0) override;
+			virtual void	Rotate(const xMousePos& pos0, const xMousePos& pos1, int param = 0) override;
+			virtual void	Zoom(const xMousePos& pos, bool zoomin, int param = 0) override;
 		};
 
 		class XEASYGL_API xViewer : public xEventParser
 		{
 		public:
-			xViewer(xCamera* camera = nullptr);
+			xViewer(xFirstPersonCamera* camera = nullptr);
 			~xViewer(void);
 
 			xDrawArgs& DrawArgs() const;
@@ -217,10 +252,11 @@ namespace xlonlat
 			virtual void	 OnMouseWheel(const xMousePos& pos, bool zoomin) override;
 
 		protected:
-			xCamera*	m_camera;
+			xFirstPersonCamera*	m_camera;
 			xDrawArgs*	m_drawArgs;
 			xMousePos   m_lastLDown;
 			xMousePos   m_lastRDown;
+			xTexture	m_logoImg;
 
 			void		Begin2D();
 			void		Begin3D();

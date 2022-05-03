@@ -4,16 +4,40 @@ namespace xlonlat
 {
 	namespace xEasyGL
 	{
-		xCamera::xCamera() : m_viewer(nullptr)
+		xICamera::xICamera() : m_viewer(nullptr)
 		{
 		}
 
-		xCamera::~xCamera()
+		xICamera::~xICamera() 
+		{
+		}
+
+		void xICamera::Update()
+		{
+			m_state = m_statePre;
+		}
+
+		void xICamera::Link(const xViewer* viewer)
+		{
+			m_viewer = viewer;
+		}
+
+		void xICamera::State(const xCameraState& state)
+		{
+			m_statePre = state;
+		}
+
+
+		xFirstPersonCamera::xFirstPersonCamera()
+		{
+		}
+
+		xFirstPersonCamera::~xFirstPersonCamera()
 		{
 			m_viewer = nullptr;
 		}
 
-		void xCamera::Pan(const xMousePos& pos0, const xMousePos& pos1, int param)
+		void xFirstPersonCamera::Pan(const xMousePos& pos0, const xMousePos& pos1, int param)
 		{
 			assert(m_viewer != nullptr);
 
@@ -24,29 +48,29 @@ namespace xlonlat
 
 			xDrawArgs& args = m_viewer->DrawArgs();
 
-			float hgt = m_stateBak.pos.z;
+			float hgt = m_statePre.pos.z;
 			float fovy = args.ps().fovy;
 			float zNear = args.ps().zNear;
 			float height = args.vs().h * 1.f;
 			float pixelSize = (tan(glm::radians(fovy / 2)) * (hgt - zNear)) / (height / 2);
 
-			glm::vec3 up = glm::normalize(m_stateBak.up);
-			glm::vec3 forward = glm::normalize(m_stateBak.lookAt - m_stateBak.pos);
+			glm::vec3 up = glm::normalize(m_statePre.up);
+			glm::vec3 forward = glm::normalize(m_statePre.lookAt - m_statePre.pos);
 			glm::vec3 right = glm::normalize(glm::cross(forward, up));
 
-			m_stateBak.pos -= (1.0f * xoff * right * pixelSize);
-			m_stateBak.pos += (1.0f * yoff * up * pixelSize);
-			m_stateBak.lookAt -= (1.0f * xoff * right * pixelSize);
-			m_stateBak.lookAt += (1.0f * yoff * up * pixelSize);
+			m_statePre.pos -= (1.0f * xoff * right * pixelSize);
+			m_statePre.pos += (1.0f * yoff * up * pixelSize);
+			m_statePre.lookAt -= (1.0f * xoff * right * pixelSize);
+			m_statePre.lookAt += (1.0f * yoff * up * pixelSize);
 
 			xProjState ps = args.ps();
-			ps.zFar = fabs(m_stateBak.pos.z * 2.f);
+			ps.zFar = fabs(m_statePre.pos.z * 2.f);
 			if (ps.zFar < 1000) ps.zFar = 1000;
 			ps.zNear = ps.zFar * 0.001f;
 			args.ps(ps);
 		}
 
-		void xCamera::Rotate(const xMousePos& pos0, const xMousePos& pos1, int param/*=0*/)
+		void xFirstPersonCamera::Rotate(const xMousePos& pos0, const xMousePos& pos1, int param/*=0*/)
 		{
 			assert(m_viewer != nullptr);
 
@@ -61,11 +85,11 @@ namespace xlonlat
 			float height = args.vs().h * 1.f;
 			float length = std::min(width, height);
 
-			glm::vec3 up = glm::normalize(m_stateBak.up);
-			glm::vec3 forward = glm::normalize(m_stateBak.lookAt - m_stateBak.pos);
+			glm::vec3 up = glm::normalize(m_statePre.up);
+			glm::vec3 forward = glm::normalize(m_statePre.lookAt - m_statePre.pos);
 			glm::vec3 right = glm::normalize(glm::cross(forward, up));
 
-			if (abs(xoff) >= abs(yoff))
+			//if (abs(xoff) >= abs(yoff))
 			{
 				float ang = glm::quarter_pi<float>() * xoff / length;
 
@@ -79,10 +103,10 @@ namespace xlonlat
 				right = right * quat;
 				up = glm::cross(right, forward);
 
-				m_stateBak.up = up;
-				m_stateBak.lookAt = m_state.pos + forward;
+				m_statePre.up = up;
+				m_statePre.lookAt = m_state.pos + forward;
 			}
-			else
+			//else
 			{
 				float ang = glm::quarter_pi<float>() * yoff / length;
 
@@ -96,51 +120,36 @@ namespace xlonlat
 				forward = forward * quat;
 				right = glm::cross(forward, up);
 
-				m_stateBak.up = up;
-				m_stateBak.lookAt = m_state.pos + forward;
+				m_statePre.up = up;
+				m_statePre.lookAt = m_state.pos + forward;
 			}
 
 			xProjState ps = args.ps();
-			ps.zFar = fabs(m_stateBak.pos.z * 2.f);
+			ps.zFar = fabs(m_statePre.pos.z * 2.f);
 			if (ps.zFar < 1000) ps.zFar = 1000;
 			ps.zNear = ps.zFar * 0.001f;
 			args.ps(ps);
 		}
 
-		void xCamera::Zoom(const xMousePos& pos, bool zoomin, int param)
+		void xFirstPersonCamera::Zoom(const xMousePos& pos, bool zoomin, int param)
 		{
 			assert(m_viewer != nullptr);
 
-			glm::vec3 forward = glm::normalize(m_stateBak.lookAt - m_stateBak.pos);
+			glm::vec3 forward = glm::normalize(m_statePre.lookAt - m_statePre.pos);
 
 			xDrawArgs& args = m_viewer->DrawArgs();
 
 			float dir = zoomin ? 1.f : -1.f;
-			float len = m_stateBak.pos.z;
+			float len = m_statePre.pos.z;
 
-			m_stateBak.pos += (forward * dir * len * 0.1f);
-			m_stateBak.lookAt = m_stateBak.pos + forward;
+			m_statePre.pos += (forward * dir * len * 0.1f);
+			m_statePre.lookAt = m_statePre.pos + forward;
 
 			xProjState ps = args.ps();
-			ps.zFar = fabs(m_stateBak.pos.z * 2.f);
+			ps.zFar = fabs(m_statePre.pos.z * 2.f);
 			if (ps.zFar < 1000) ps.zFar = 1000;
 			ps.zNear = ps.zFar * 0.001f;
 			args.ps(ps);
-		}
-
-		void xCamera::Update()
-		{
-			m_state = m_stateBak;
-		}
-
-		void xCamera::Link(const xViewer* viewer)
-		{
-			m_viewer = viewer;
-		}
-
-		void xCamera::State(const xCameraState& state)
-		{
-			m_stateBak = state;
 		}
 	}
 }

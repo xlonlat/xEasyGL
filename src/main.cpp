@@ -80,9 +80,9 @@ int main()
 
 	// Test image.
 	{
-		const std::wstring& img = xGlobal::Instance().ResourcePath() + L"images\\opengl_logo.jpeg";
+		const std::wstring& img = std::wstring(xGlobal::Instance().ResourcePath()) + L"images\\opengl_logo.jpeg";
 		int w = 0, h = 0, c = 0;
-		unsigned char* data = xGlobal::Instance().ReadImage(img, w, h, c);
+		unsigned char* data = xGlobal::Instance().ReadImage(img.c_str(), w, h, c);
 		if (data)
 		{
 			free(data);
