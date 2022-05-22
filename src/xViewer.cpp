@@ -4,30 +4,25 @@ namespace xlonlat
 {
 	namespace xEasyGL
 	{
-		xViewer::xViewer(xFirstPersonCamera* camera/* = nullptr */)
+		xViewer::xViewer(int width, int height, xCamera* camera/* = nullptr */)
 		{
-			xViewportState vs{};
-			vs.x = 0;
-			vs.y = 0;
-			vs.w = 1280;
-			vs.h = 720;
-
-			xProjState ps{};
-			ps.zNear = 0.1f;
-			ps.zFar = 1000.0f;
-			ps.fovy = 45.0f;
-			ps.aspect = 1.0f * vs.w / vs.h;
-
 			xCameraState cam{};
-			cam.pos = glm::vec3(0.f, 0.f, 300.f);
-			cam.lookAt = glm::vec3(0.f, 0.f, 0.f);
+			cam.eye = glm::vec3(0.f, 0.f, 300.f);
+			cam.tar = glm::vec3(0.f, 0.f, 0.f);
 			cam.up = glm::vec3(0.f, 1.f, 0.f);
-
-			m_drawArgs = new xDrawArgs(vs, ps);
+			cam.vs.x = 0;
+			cam.vs.y = 0;
+			cam.vs.w = width;
+			cam.vs.h = height;
+			cam.ps.zNear = 0.1f;
+			cam.ps.zFar = 1000.0f;
+			cam.ps.fovy = 45.0f;
+			cam.ps.aspect = 1.0f * width / height;
 
 			camera == nullptr ? m_camera = new xFirstPersonCamera() : m_camera = camera;
 			m_camera->Link(this);
-			m_camera->State(cam);
+			m_camera->SetState(cam);
+			m_camera->Update();
 
 			m_lastLDown.x = m_lastLDown.y = -1;
 			m_lastRDown.x = m_lastRDown.y = -1;
@@ -36,12 +31,11 @@ namespace xlonlat
 		xViewer::~xViewer(void)
 		{
 			delete m_camera;
-			delete m_drawArgs;
 		}
 
-		xDrawArgs& xViewer::DrawArgs() const
+		xCamera& xViewer::Camera() const
 		{
-			return *m_drawArgs;
+			return *m_camera;
 		}
 
 		void xViewer::Initialize()
@@ -58,8 +52,8 @@ namespace xlonlat
 		{
 			m_camera->Update();
 
-			int width = (int)m_drawArgs->vs().w;
-			int height = (int)m_drawArgs->vs().h;
+			int width = (int)m_camera->State().vs.w;
+			int height = (int)m_camera->State().vs.h;
 
 			glClearDepth(1.0f);
 			glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
@@ -135,64 +129,64 @@ namespace xlonlat
 			{
 			case xEasyGL::Resize:
 			{
-				xViewportState vs = m_drawArgs->vs();
+				xViewportState vs = m_camera->State().vs;
 				vs.w = event.x;
 				vs.h = event.y;
-				m_drawArgs->vs(vs);
+				m_camera->SetViewport(vs);
 
-				xProjState ps = m_drawArgs->ps();
+				xProjState ps = m_camera->State().ps;
 				ps.aspect = 1.0f * vs.w / vs.h;
-				m_drawArgs->ps(ps);
+				m_camera->SetProjection(ps);
 			}break;
 			default:
 				break;
 			}
 		}
 
-		void xViewer::OnLButtonUp(const xMousePos& pos)
+		void xViewer::OnLButtonUp(const xMousePos& eye)
 		{
 			m_lastLDown.x = m_lastLDown.y = -1;
 		}
 
-		void xViewer::OnRButtonUp(const xMousePos& pos)
+		void xViewer::OnRButtonUp(const xMousePos& eye)
 		{
 			m_lastRDown.x = m_lastRDown.y = -1;
 		}
 
-		void xViewer::OnMouseMove(const xMousePos& pos, int button)
+		void xViewer::OnMouseMove(const xMousePos& eye, int button)
 		{
 			if (button == 0)	// Left button.
 			{
 				if (m_lastLDown.x == -1 && m_lastLDown.y == -1)
 				{
-					m_lastLDown = pos;
+					m_lastLDown = eye;
 				}
 
-				m_camera->Pan(m_lastLDown, pos);
+				m_camera->Pan(m_lastLDown, eye);
 
-				m_lastLDown = pos;
+				m_lastLDown = eye;
 			}
 			else if (button == 1)	// Right button.
 			{
 				if (m_lastRDown.x == -1 && m_lastRDown.y == -1)
 				{
-					m_lastRDown = pos;
+					m_lastRDown = eye;
 				}
 
-				m_camera->Rotate(m_lastRDown, pos);
+				m_camera->Rotate(m_lastRDown, eye);
 
-				m_lastRDown = pos;
+				m_lastRDown = eye;
 			}
 		}
 
-		void xViewer::OnMouseWheel(const xMousePos& pos, bool zoomin)
+		void xViewer::OnMouseWheel(const xMousePos& eye, bool zoomin)
 		{
-			m_camera->Zoom(pos, zoomin);
+			m_camera->Zoom(eye, zoomin);
 		}
 
 		void xViewer::Begin2D()
 		{
-			const xViewportState& vs = m_drawArgs->vs();
+			const xViewportState& vs = m_camera->State().vs;
 
 			// Set viewport.
 			glViewport(0, 0, vs.w, vs.h);
@@ -209,8 +203,8 @@ namespace xlonlat
 
 		void xViewer::Begin3D()
 		{
-			const xViewportState& vs = m_drawArgs->vs();
-			const xProjState& ps = m_drawArgs->ps();
+			const xViewportState& vs = m_camera->State().vs;
+			const xProjState& ps = m_camera->State().ps;
 
 			// Set viewport .
 			glViewport(0, 0, vs.w, vs.h);
@@ -222,7 +216,7 @@ namespace xlonlat
 			glLoadMatrixf(glm::value_ptr(proj));
 
 			const xCameraState& cam = m_camera->State();
-			glm::mat4 model = glm::lookAtRH(cam.pos, cam.lookAt, cam.up);
+			glm::mat4 model = glm::lookAtRH(cam.eye, cam.tar, cam.up);
 			glMatrixMode(GL_MODELVIEW);
 			glLoadIdentity();
 			glLoadMatrixf(glm::value_ptr(model));

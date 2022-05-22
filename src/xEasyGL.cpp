@@ -1,12 +1,15 @@
 #include "xEasyGL.h"
 
 #ifdef XEASYGL_PLATFORM_WINDOWS
+#ifdef APIENTRY
+#undef APIENTRY
+#endif // APIENTRY
 #include <windows.h>
 #endif // XEASYGL_PLATFORM_WINDOWS
 
 #ifndef STB_IMAGE_IMPLEMENTATION
 #define STB_IMAGE_IMPLEMENTATION
-#endif // !STB_IMAGE_IMPLEMENTATION
+#endif // STB_IMAGE_IMPLEMENTATION
 
 #include <stb/stb_image.h>
 

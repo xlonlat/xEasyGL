@@ -4,27 +4,38 @@ namespace xlonlat
 {
 	namespace xEasyGL
 	{
-		xICamera::xICamera() : m_viewer(nullptr)
+		xCamera::xCamera() : m_viewer(nullptr)
 		{
 		}
 
-		xICamera::~xICamera() 
+		xCamera::~xCamera() 
 		{
+			m_viewer = nullptr;
 		}
 
-		void xICamera::Update()
+		void xCamera::Update()
 		{
 			m_state = m_statePre;
 		}
 
-		void xICamera::Link(const xViewer* viewer)
+		void xCamera::Link(const xViewer* viewer)
 		{
 			m_viewer = viewer;
 		}
 
-		void xICamera::State(const xCameraState& state)
+		void xCamera::SetState(const xCameraState& state)
 		{
 			m_statePre = state;
+		}
+
+		void xCamera::SetViewport(const xViewportState& vs)
+		{
+			m_statePre.vs = vs;
+		}
+
+		void xCamera::SetProjection(const xProjState& ps)
+		{
+			m_statePre.ps = ps;
 		}
 
 
@@ -34,59 +45,59 @@ namespace xlonlat
 
 		xFirstPersonCamera::~xFirstPersonCamera()
 		{
-			m_viewer = nullptr;
 		}
 
-		void xFirstPersonCamera::Pan(const xMousePos& pos0, const xMousePos& pos1, int param)
+		void xFirstPersonCamera::Pan(const xMousePos& posA, const xMousePos& posB, int param)
 		{
 			assert(m_viewer != nullptr);
 
-			int xoff = pos1.x - pos0.x;
-			int yoff = pos1.y - pos0.y;
+			int xoff = posB.x - posA.x;
+			int yoff = posB.y - posA.y;
 
 			if (xoff == 0 && yoff == 0) return;
 
-			xDrawArgs& args = m_viewer->DrawArgs();
+			const xCameraState& cam = m_viewer->Camera().State();
+			xProjState ps = cam.ps;
 
-			float hgt = m_statePre.pos.z;
-			float fovy = args.ps().fovy;
-			float zNear = args.ps().zNear;
-			float height = args.vs().h * 1.f;
-			float pixelSize = (tan(glm::radians(fovy / 2)) * (hgt - zNear)) / (height / 2);
+			float hgt = m_statePre.eye.z;
+			float fovy = ps.fovy;
+			float zNear = ps.zNear;
+			float height = cam.vs.h * 1.f;
+			float pixelSize = (tan(glm::radians(fovy / 2)) * hgt) / (height / 2);
 
 			glm::vec3 up = glm::normalize(m_statePre.up);
-			glm::vec3 forward = glm::normalize(m_statePre.lookAt - m_statePre.pos);
+			glm::vec3 forward = glm::normalize(m_statePre.tar - m_statePre.eye);
 			glm::vec3 right = glm::normalize(glm::cross(forward, up));
 
-			m_statePre.pos -= (1.0f * xoff * right * pixelSize);
-			m_statePre.pos += (1.0f * yoff * up * pixelSize);
-			m_statePre.lookAt -= (1.0f * xoff * right * pixelSize);
-			m_statePre.lookAt += (1.0f * yoff * up * pixelSize);
+			m_statePre.eye -= (1.0f * xoff * right * pixelSize);
+			m_statePre.eye += (1.0f * yoff * up * pixelSize);
+			m_statePre.tar -= (1.0f * xoff * right * pixelSize);
+			m_statePre.tar += (1.0f * yoff * up * pixelSize);
 
-			xProjState ps = args.ps();
-			ps.zFar = fabs(m_statePre.pos.z * 2.f);
+			ps.zFar = fabs(m_statePre.eye.z * 2.f);
 			if (ps.zFar < 1000) ps.zFar = 1000;
 			ps.zNear = ps.zFar * 0.001f;
-			args.ps(ps);
+			m_viewer->Camera().SetProjection(ps);
 		}
 
-		void xFirstPersonCamera::Rotate(const xMousePos& pos0, const xMousePos& pos1, int param/*=0*/)
+		void xFirstPersonCamera::Rotate(const xMousePos& posA, const xMousePos& posB, int param/*=0*/)
 		{
 			assert(m_viewer != nullptr);
 
-			int xoff = pos1.x - pos0.x;
-			int yoff = pos1.y - pos0.y;
+			int xoff = posB.x - posA.x;
+			int yoff = posB.y - posA.y;
 
 			if (xoff == 0 && yoff == 0) return;
 
-			xDrawArgs& args = m_viewer->DrawArgs();
+			const xCameraState& cam = m_viewer->Camera().State();
+			xProjState ps = cam.ps;
 
-			float width = args.vs().w * 1.f;
-			float height = args.vs().h * 1.f;
+			float width = cam.vs.w * 1.f;
+			float height = cam.vs.h * 1.f;
 			float length = std::min(width, height);
 
 			glm::vec3 up = glm::normalize(m_statePre.up);
-			glm::vec3 forward = glm::normalize(m_statePre.lookAt - m_statePre.pos);
+			glm::vec3 forward = glm::normalize(m_statePre.tar - m_statePre.eye);
 			glm::vec3 right = glm::normalize(glm::cross(forward, up));
 
 			//if (abs(xoff) >= abs(yoff))
@@ -104,7 +115,7 @@ namespace xlonlat
 				up = glm::cross(right, forward);
 
 				m_statePre.up = up;
-				m_statePre.lookAt = m_state.pos + forward;
+				m_statePre.tar = m_state.eye + forward;
 			}
 			//else
 			{
@@ -121,35 +132,84 @@ namespace xlonlat
 				right = glm::cross(forward, up);
 
 				m_statePre.up = up;
-				m_statePre.lookAt = m_state.pos + forward;
+				m_statePre.tar = m_state.eye + forward;
 			}
 
-			xProjState ps = args.ps();
-			ps.zFar = fabs(m_statePre.pos.z * 2.f);
+			ps.zFar = fabs(m_statePre.eye.z * 2.f);
 			if (ps.zFar < 1000) ps.zFar = 1000;
 			ps.zNear = ps.zFar * 0.001f;
-			args.ps(ps);
+			m_viewer->Camera().SetProjection(ps);
 		}
 
 		void xFirstPersonCamera::Zoom(const xMousePos& pos, bool zoomin, int param)
 		{
 			assert(m_viewer != nullptr);
 
-			glm::vec3 forward = glm::normalize(m_statePre.lookAt - m_statePre.pos);
+			glm::vec3 forward = glm::normalize(m_statePre.tar - m_statePre.eye);
 
-			xDrawArgs& args = m_viewer->DrawArgs();
+			const xCameraState& cam = m_viewer->Camera().State();
 
 			float dir = zoomin ? 1.f : -1.f;
-			float len = m_statePre.pos.z;
+			float len = m_statePre.eye.z;
 
-			m_statePre.pos += (forward * dir * len * 0.1f);
-			m_statePre.lookAt = m_statePre.pos + forward;
+			m_statePre.eye += (forward * dir * len * 0.1f);
+			m_statePre.tar = m_statePre.eye + forward;
 
-			xProjState ps = args.ps();
-			ps.zFar = fabs(m_statePre.pos.z * 2.f);
+			xProjState ps = cam.ps;
+			ps.zFar = fabs(m_statePre.eye.z * 2.f);
 			if (ps.zFar < 1000) ps.zFar = 1000;
 			ps.zNear = ps.zFar * 0.001f;
-			args.ps(ps);
+			m_viewer->Camera().SetProjection(ps);
 		}
+	
+
+		xMapCamera::xMapCamera()
+		{
+
+		}
+
+		xMapCamera::~xMapCamera()
+		{
+
+		}
+
+		void xMapCamera::Pan(const xMousePos& posA, const xMousePos& posB, int param)
+		{
+			assert(m_viewer != nullptr);
+
+			int xoff = posB.x - posA.x;
+			int yoff = posB.y - posA.y;
+
+			if (xoff == 0 && yoff == 0) return;
+
+			const xCameraState& cam = m_viewer->Camera().State();
+
+			float hgt = m_statePre.eye.z;
+			float fovy = cam.ps.fovy;
+			float zNear = cam.ps.zNear;
+			float height = cam.vs.h * 1.f;
+			float pixelSize = (tan(glm::radians(fovy / 2)) * hgt) / (height / 2);
+
+			glm::vec3 off = glm::vec3(-xoff, yoff, 0.0);
+
+			m_statePre.eye += (1.0f * off * pixelSize);
+			m_statePre.tar += (1.0f * off * pixelSize);
+
+			xProjState ps = cam.ps;
+			ps.zFar = fabs(m_statePre.eye.z * 2.f);
+			if (ps.zFar < 1000) ps.zFar = 1000;
+			ps.zNear = ps.zFar * 0.001f;
+			m_viewer->Camera().SetProjection(ps);
+		}
+
+		void xMapCamera::Rotate(const xMousePos& posA, const xMousePos& posB, int param)
+		{
+		}
+
+		void xMapCamera::Zoom(const xMousePos& pos, bool zoomin, int param)
+		{
+
+		}
+
 	}
 }

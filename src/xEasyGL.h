@@ -69,25 +69,27 @@ namespace xlonlat
 
 		struct xViewportState
 		{
-			int x;
-			int y;
-			int w;
-			int h;
+			int		x;
+			int		y;
+			int		w;
+			int		h;
 		};
 
 		struct xProjState
 		{
-			float zNear;
-			float zFar;
-			float fovy;
-			float aspect;
+			float	zNear;
+			float	zFar;
+			float	fovy;
+			float	aspect;
 		};
 
 		struct xCameraState
 		{
-			glm::vec3	pos;
-			glm::vec3	lookAt;
-			glm::vec3	up;
+			glm::vec3		eye;
+			glm::vec3		tar;
+			glm::vec3		up;
+			xProjState		ps;
+			xViewportState	vs;
 		};
 
 		struct xMousePos
@@ -188,64 +190,45 @@ namespace xlonlat
 		class XEASYGL_API xEventParser
 		{
 		public :
-			virtual void OnLButtonUp(const xMousePos& pos){}
-			virtual void OnRButtonUp(const xMousePos& pos){}
-			virtual void OnLButtonDown(const xMousePos& pos){}
-			virtual void OnRButtonDown(const xMousePos& pos){}
-			virtual void OnMouseMove(const xMousePos& pos, int button) {}
-			virtual void OnMouseWheel(const xMousePos& pos, bool zoomin) {}
+			virtual void OnLButtonUp(const xMousePos& eye){}
+			virtual void OnRButtonUp(const xMousePos& eye){}
+			virtual void OnLButtonDown(const xMousePos& eye){}
+			virtual void OnRButtonDown(const xMousePos& eye){}
+			virtual void OnMouseMove(const xMousePos& eye, int button) {}
+			virtual void OnMouseWheel(const xMousePos& eye, bool zoomin) {}
 			virtual void OnSize(int cx, int cy) {}
 			virtual void OnKeyUp(int key) {}
 			virtual void OnKeyDown(int key) {}
 		};
 
-		class XEASYGL_API xDrawArgs
+		class XEASYGL_API xCamera
 		{
 		public:
-			xDrawArgs();
-			xDrawArgs(const xViewportState& vs, const xProjState& ps);
-			virtual ~xDrawArgs();
-
-			const xViewportState& vs() const;
-			const xProjState&	  ps() const;
-
-			void  vs(const xViewportState& vs);
-			void  ps(const xProjState& ps);
-		private:
-			xViewportState m_vs;
-			xProjState     m_ps;
-		};
-
-		class XEASYGL_API xLayer : public xEventParser
-		{
-		public :
-			virtual void	Clear() = 0;
-			virtual void	Draw2D(const xDrawArgs& args) = 0;
-			virtual void	Draw3D(const xDrawArgs& args) = 0;
-		};
-
-		class XEASYGL_API xICamera
-		{
-		public:
-			xICamera();
-			virtual ~xICamera();
+			xCamera();
+			virtual ~xCamera();
 
 			void	Update();	// Called by render process.
 			void	Link(const xViewer* viewer);
-			void	State(const xCameraState& state);
 
-			virtual void	Pan(const xMousePos& pos0, const xMousePos& pos1, int param = 0) = 0;
-			virtual void	Rotate(const xMousePos& pos0, const xMousePos& pos1, int param = 0) = 0;
-			virtual void	Zoom(const xMousePos& pos, bool zoomin, int param = 0) = 0;
+			void	SetState(const xCameraState& state);
+			void	SetViewport(const xViewportState& vs);
+			void	SetProjection(const xProjState& ps);
 
-			const xCameraState& State() { return m_state; }
+			virtual void	Pan(const xMousePos& posA, const xMousePos& posB, int param = 0) = 0;
+			virtual void	Rotate(const xMousePos& posA, const xMousePos& posB, int param = 0) = 0;
+			virtual void	Zoom(const xMousePos& eye, bool zoomin, int param = 0) = 0;
+
+			const xCameraState& State() const { return m_state; }
+		
 		protected:
 			xCameraState	m_state;
 			xCameraState	m_statePre;
 			const xViewer*	m_viewer;
+		private:
+			xCamera(const xCamera& camera) {}
 		};
 
-		class XEASYGL_API xFirstPersonCamera : public xICamera
+		class XEASYGL_API xFirstPersonCamera : public xCamera
 		{
 		public:
 			xFirstPersonCamera();
@@ -253,35 +236,51 @@ namespace xlonlat
 
 			virtual void	Pan(const xMousePos& pos0, const xMousePos& pos1, int param = 0) override;
 			virtual void	Rotate(const xMousePos& pos0, const xMousePos& pos1, int param = 0) override;
-			virtual void	Zoom(const xMousePos& pos, bool zoomin, int param = 0) override;
+			virtual void	Zoom(const xMousePos& eye, bool zoomin, int param = 0) override;
 		};
 
-		class XEASYGL_API xTrackballCamera
+		class XEASYGL_API xMapCamera : public xCamera
 		{
+		public:
+			xMapCamera();
+			virtual ~xMapCamera();
 
+			virtual void	Pan(const xMousePos& pos0, const xMousePos& pos1, int param = 0) override;
+			virtual void	Rotate(const xMousePos& pos0, const xMousePos& pos1, int param = 0) override;
+			virtual void	Zoom(const xMousePos& eye, bool zoomin, int param = 0) override;
+		};
+
+		class XEASYGL_API xLayer : public xEventParser
+		{
+		public:
+			xLayer(const xViewer* viewer):m_viewer(viewer) {}
+			virtual void	Clear() = 0;
+			virtual void	Draw2D() = 0;
+			virtual void	Draw3D() = 0;
+		protected:
+			const xViewer* m_viewer;
 		};
 
 		class XEASYGL_API xViewer : public xEventParser
 		{
 		public:
-			xViewer(xFirstPersonCamera* camera = nullptr);
+			xViewer(int width, int height, xCamera* camera = nullptr);
 			~xViewer(void);
 
-			xDrawArgs& DrawArgs() const;
+			xCamera&         Camera()	const;
 
 			virtual void	 Initialize();
 			virtual void	 Render();
 			virtual void	 Clear();
 			virtual void	 Event(const xEvent& event);
 
-			virtual void	 OnLButtonUp(const xMousePos& pos) override;
-			virtual void	 OnRButtonUp(const xMousePos& pos) override;
-			virtual void	 OnMouseMove(const xMousePos& pos, int button) override;
-			virtual void	 OnMouseWheel(const xMousePos& pos, bool zoomin) override;
+			virtual void	 OnLButtonUp(const xMousePos& eye) override;
+			virtual void	 OnRButtonUp(const xMousePos& eye) override;
+			virtual void	 OnMouseMove(const xMousePos& eye, int button) override;
+			virtual void	 OnMouseWheel(const xMousePos& eye, bool zoomin) override;
 
 		protected:
-			xFirstPersonCamera*	m_camera;
-			xDrawArgs*	m_drawArgs;
+			xCamera*	m_camera;
 			xMousePos   m_lastLDown;
 			xMousePos   m_lastRDown;
 			xTexture	m_logoImg;

@@ -147,8 +147,8 @@ namespace xlonlat
 
 		void xWindow::Run()
 		{
-            int width = m_viewer->DrawArgs().vs().w;
-            int height = m_viewer->DrawArgs().vs().h;
+            int width = m_viewer->Camera().State().vs.w;
+            int height = m_viewer->Camera().State().vs.h;
 
             glfwInit();
 

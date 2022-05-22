@@ -10,8 +10,8 @@ public:
 
 	virtual void Render() override
     {
-		float width = (float)(m_drawArgs->vs().w);
-		float height = (float)(m_drawArgs->vs().h);
+		float width = (float)(m_camera->State().vs.w);
+		float height = (float)(m_camera->State().vs.h);
 
 		glClearDepth(1.0f);
 		glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
@@ -79,7 +79,7 @@ int main()
 	std::wcout.imbue(std::locale("chs"));
 
 	{
-		xWindow window(new xViewer);
+		xWindow window(new xViewer(1280, 720, new xFirstPersonCamera));
 		window.Run();
 	}
 
