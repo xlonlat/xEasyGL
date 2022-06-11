@@ -143,17 +143,17 @@ namespace xlonlat
 			}
 		}
 
-		void xViewer::OnLButtonUp(const xMousePos& eye)
+		void xViewer::OnLButtonUp(const glm::ivec2& eye)
 		{
 			m_lastLDown.x = m_lastLDown.y = -1;
 		}
 
-		void xViewer::OnRButtonUp(const xMousePos& eye)
+		void xViewer::OnRButtonUp(const glm::ivec2& eye)
 		{
 			m_lastRDown.x = m_lastRDown.y = -1;
 		}
 
-		void xViewer::OnMouseMove(const xMousePos& eye, int button)
+		void xViewer::OnMouseMove(const glm::ivec2& eye, int button)
 		{
 			if (button == 0)	// Left button.
 			{
@@ -179,7 +179,7 @@ namespace xlonlat
 			}
 		}
 
-		void xViewer::OnMouseWheel(const xMousePos& eye, bool zoomin)
+		void xViewer::OnMouseWheel(const glm::ivec2& eye, bool zoomin)
 		{
 			m_camera->Zoom(eye, zoomin);
 		}

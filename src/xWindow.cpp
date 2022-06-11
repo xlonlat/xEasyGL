@@ -13,7 +13,7 @@ namespace xlonlat
             event.type = xEasyGL::Resize;
             event.x = width;
             event.y = height;
-            event.val = 0;
+            event.tag = 0;
 
             viewer->Event(event);
             viewer->OnSize(width, height);
@@ -38,9 +38,9 @@ namespace xlonlat
             event.type = action == GLFW_RELEASE ? xEasyGL::MouseUp : xEasyGL::MouseDown;
             event.x = (int)x;
             event.y = (int)y;
-            event.val = btn;
+            event.tag = btn;
 
-            xMousePos mouse{};
+            glm::ivec2 mouse{};
             mouse.x = (int)x;
             mouse.y = (int)y;
 
@@ -76,9 +76,9 @@ namespace xlonlat
             event.type = xEasyGL::MouseMove;
             event.x = (int)x;
             event.y = (int)y;
-            event.val = btn;
+            event.tag = btn;
 
-            xMousePos mouse{};
+            glm::ivec2 mouse{};
             mouse.x = (int)x;
             mouse.y = (int)y;
 
@@ -99,9 +99,9 @@ namespace xlonlat
             event.type = xEasyGL::MouseWheel;
             event.x = (int)x;
             event.y = (int)y;
-            event.val = yoff > 0 ? 1 : 0;
+            event.tag = yoff > 0 ? 1 : 0;
 
-            xMousePos mouse{};
+            glm::ivec2 mouse{};
             mouse.x = (int)x;
             mouse.y = (int)y;
 
@@ -126,7 +126,7 @@ namespace xlonlat
 				event.type = action == GLFW_PRESS ? xEasyGL::KeyDown : xEasyGL::KeyUp;
 				event.x = (int)x;
 				event.y = (int)y;
-				event.val = key;
+				event.tag = key;
 
 				viewer->Event(event);
 

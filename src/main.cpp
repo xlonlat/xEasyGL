@@ -33,32 +33,32 @@ public:
 #endif // _DEBUG
     }
 
-	virtual void OnLButtonDown(const xMousePos& pos) override
+	virtual void OnLButtonDown(const glm::ivec2& pos) override
 	{
 		std::cout << "OnLButtonDown:" << pos.x << "," << pos.y << std::endl;
 	}
 
-	virtual void OnRButtonDown(const xMousePos& pos) override
+	virtual void OnRButtonDown(const glm::ivec2& pos) override
 	{
 		std::cout << "OnRButtonDown:" << pos.x << "," << pos.y << std::endl;
 	}
 
-	virtual void OnLButtonUp(const xMousePos& pos) override
+	virtual void OnLButtonUp(const glm::ivec2& pos) override
 	{
 		std::cout << "OnLButtonUp:" << pos.x << "," << pos.y << std::endl;
 	}
 
-	virtual void OnRButtonUp(const xMousePos& pos) override
+	virtual void OnRButtonUp(const glm::ivec2& pos) override
 	{
 		std::cout << "OnRButtonUp:" << pos.x << "," << pos.y << std::endl;
 	}
 
-	virtual void OnMouseMove(const xMousePos& pos, int button) override
+	virtual void OnMouseMove(const glm::ivec2& pos, int button) override
 	{
 		std::cout << "OnMouseMove:" << pos.x << "," << pos.y << ",button=" << button << std::endl;
 	}
 
-	virtual void OnMouseWheel(const xMousePos& pos, bool zoomin) override
+	virtual void OnMouseWheel(const glm::ivec2& pos, bool zoomin) override
 	{
 		std::cout << "OnMouseWheel:" << pos.x << "," << pos.y << ",zoomin=" << zoomin << std::endl;
 	}

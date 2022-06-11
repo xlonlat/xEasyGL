@@ -47,7 +47,7 @@ namespace xlonlat
 		{
 		}
 
-		void xFirstPersonCamera::Pan(const xMousePos& posA, const xMousePos& posB, int param)
+		void xFirstPersonCamera::Pan(const glm::ivec2& posA, const glm::ivec2& posB, int param)
 		{
 			assert(m_viewer != nullptr);
 
@@ -80,7 +80,7 @@ namespace xlonlat
 			m_viewer->Camera().SetProjection(ps);
 		}
 
-		void xFirstPersonCamera::Rotate(const xMousePos& posA, const xMousePos& posB, int param/*=0*/)
+		void xFirstPersonCamera::Rotate(const glm::ivec2& posA, const glm::ivec2& posB, int param/*=0*/)
 		{
 			assert(m_viewer != nullptr);
 
@@ -141,7 +141,7 @@ namespace xlonlat
 			m_viewer->Camera().SetProjection(ps);
 		}
 
-		void xFirstPersonCamera::Zoom(const xMousePos& pos, bool zoomin, int param)
+		void xFirstPersonCamera::Zoom(const glm::ivec2& pos, bool zoomin, int param)
 		{
 			assert(m_viewer != nullptr);
 
@@ -173,7 +173,7 @@ namespace xlonlat
 
 		}
 
-		void xMapCamera::Pan(const xMousePos& posA, const xMousePos& posB, int param)
+		void xMapCamera::Pan(const glm::ivec2& posA, const glm::ivec2& posB, int param)
 		{
 			assert(m_viewer != nullptr);
 
@@ -202,11 +202,11 @@ namespace xlonlat
 			m_viewer->Camera().SetProjection(ps);
 		}
 
-		void xMapCamera::Rotate(const xMousePos& posA, const xMousePos& posB, int param)
+		void xMapCamera::Rotate(const glm::ivec2& posA, const glm::ivec2& posB, int param)
 		{
 		}
 
-		void xMapCamera::Zoom(const xMousePos& pos, bool zoomin, int param)
+		void xMapCamera::Zoom(const glm::ivec2& pos, bool zoomin, int param)
 		{
 
 		}

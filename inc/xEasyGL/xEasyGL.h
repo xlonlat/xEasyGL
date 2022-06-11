@@ -1,6 +1,5 @@
-
-#ifndef _XEASYGL_H_
-#define _XEASYGL_H_
+#ifndef XEASYGL_HEADER
+#define XEASYGL_HEADER
 
 #ifdef XEASYGL_PLATFORM_WINDOWS
 
@@ -9,14 +8,6 @@
 #else
 #define XEASYGL_API __declspec(dllimport)
 #endif // XEASYGL_EXPORT_DLL
-
-#ifndef _CRT_SECURE_NO_WARNINGS
-#define _CRT_SECURE_NO_WARNINGS
-#endif // _CRT_SECURE_NO_WARNINGS
-
-#ifdef _DEBUG
-#define new  new(_NORMAL_BLOCK, __FILE__, __LINE__)
-#endif
 
 #else
 #error "xEasyGL only support Windows!"
@@ -51,11 +42,11 @@ namespace xlonlat
 			Resize = 7
 		};
 
-		// --------------------------val--------------------------
+		// --------------------------tag--------------------------
 		// type==MouseDown  : 0 is left down, 1 is right down, 2 is middle down;
 		// type==MouseUp    : 0 is left up, 1 is right up, 2 is middle up;
 		// type==MouseMove  : 0 is left down, 1 is right down, 2 is middle down;
-		// type==MouseWheel : 0 is zoom out, 1 is zoom in; 
+		// type==MouseWheel : -1 is zoom out, 1 is zoom in; 
 		// type==KeyDown	: key value, same as GLFW;
 		// type==KeyUp		: key value, same as GLFW;
 		// -------------------------------------------------------
@@ -64,7 +55,7 @@ namespace xlonlat
 			xEventType	type;
 			int			x;
 			int			y;
-			int			val; 
+			int			tag; 
 		};
 
 		struct xViewportState
@@ -92,10 +83,21 @@ namespace xlonlat
 			xViewportState	vs;
 		};
 
-		struct xMousePos
+		struct xShaderToy
 		{
-			int x;
-			int y;
+			glm::vec3   iResolution;			// viewport resolution (in pixels)
+			float		iTime;					// shader playback time (in seconds)
+			float		iTimeDelta;				// render time (in seconds)
+			int			iFrame;					// shader playback frame
+			float		iChannelTime[4];		// channel playback time (in seconds)
+			glm::vec3   iChannelResolution[4];	// channel resolution (in pixels)
+			glm::vec4   iMouse;					// mouse pixel coords. xy: current (if MLB down), zw: click
+			int			iChannel0;				// input channel. XX = 2D/Cube
+			int			iChannel1;				// input channel. XX = 2D/Cube
+			int			iChannel2;				// input channel. XX = 2D/Cube
+			int			iChannel3;				// input channel. XX = 2D/Cube
+			glm::vec4   iDate;                  // (year, month, day, time in seconds)
+			float		iSampleRate;			// sound sample rate (i.e., 44100)
 		};
 
 		class xViewer;
@@ -190,12 +192,12 @@ namespace xlonlat
 		class XEASYGL_API xEventParser
 		{
 		public :
-			virtual void OnLButtonUp(const xMousePos& eye){}
-			virtual void OnRButtonUp(const xMousePos& eye){}
-			virtual void OnLButtonDown(const xMousePos& eye){}
-			virtual void OnRButtonDown(const xMousePos& eye){}
-			virtual void OnMouseMove(const xMousePos& eye, int button) {}
-			virtual void OnMouseWheel(const xMousePos& eye, bool zoomin) {}
+			virtual void OnLButtonUp(const glm::ivec2& eye){}
+			virtual void OnRButtonUp(const glm::ivec2& eye){}
+			virtual void OnLButtonDown(const glm::ivec2& eye){}
+			virtual void OnRButtonDown(const glm::ivec2& eye){}
+			virtual void OnMouseMove(const glm::ivec2& eye, int button) {}
+			virtual void OnMouseWheel(const glm::ivec2& eye, bool zoomin) {}
 			virtual void OnSize(int cx, int cy) {}
 			virtual void OnKeyUp(int key) {}
 			virtual void OnKeyDown(int key) {}
@@ -214,9 +216,9 @@ namespace xlonlat
 			void	SetViewport(const xViewportState& vs);
 			void	SetProjection(const xProjState& ps);
 
-			virtual void	Pan(const xMousePos& posA, const xMousePos& posB, int param = 0) = 0;
-			virtual void	Rotate(const xMousePos& posA, const xMousePos& posB, int param = 0) = 0;
-			virtual void	Zoom(const xMousePos& eye, bool zoomin, int param = 0) = 0;
+			virtual void	Pan(const glm::ivec2& posA, const glm::ivec2& posB, int param = 0) = 0;
+			virtual void	Rotate(const glm::ivec2& posA, const glm::ivec2& posB, int param = 0) = 0;
+			virtual void	Zoom(const glm::ivec2& eye, bool zoomin, int param = 0) = 0;
 
 			const xCameraState& State() const { return m_state; }
 		
@@ -234,9 +236,9 @@ namespace xlonlat
 			xFirstPersonCamera();
 			virtual ~xFirstPersonCamera();
 
-			virtual void	Pan(const xMousePos& pos0, const xMousePos& pos1, int param = 0) override;
-			virtual void	Rotate(const xMousePos& pos0, const xMousePos& pos1, int param = 0) override;
-			virtual void	Zoom(const xMousePos& eye, bool zoomin, int param = 0) override;
+			virtual void	Pan(const glm::ivec2& pos0, const glm::ivec2& pos1, int param = 0) override;
+			virtual void	Rotate(const glm::ivec2& pos0, const glm::ivec2& pos1, int param = 0) override;
+			virtual void	Zoom(const glm::ivec2& eye, bool zoomin, int param = 0) override;
 		};
 
 		class XEASYGL_API xMapCamera : public xCamera
@@ -245,9 +247,9 @@ namespace xlonlat
 			xMapCamera();
 			virtual ~xMapCamera();
 
-			virtual void	Pan(const xMousePos& pos0, const xMousePos& pos1, int param = 0) override;
-			virtual void	Rotate(const xMousePos& pos0, const xMousePos& pos1, int param = 0) override;
-			virtual void	Zoom(const xMousePos& eye, bool zoomin, int param = 0) override;
+			virtual void	Pan(const glm::ivec2& pos0, const glm::ivec2& pos1, int param = 0) override;
+			virtual void	Rotate(const glm::ivec2& pos0, const glm::ivec2& pos1, int param = 0) override;
+			virtual void	Zoom(const glm::ivec2& eye, bool zoomin, int param = 0) override;
 		};
 
 		class XEASYGL_API xLayer : public xEventParser
@@ -274,15 +276,15 @@ namespace xlonlat
 			virtual void	 Clear();
 			virtual void	 Event(const xEvent& event);
 
-			virtual void	 OnLButtonUp(const xMousePos& eye) override;
-			virtual void	 OnRButtonUp(const xMousePos& eye) override;
-			virtual void	 OnMouseMove(const xMousePos& eye, int button) override;
-			virtual void	 OnMouseWheel(const xMousePos& eye, bool zoomin) override;
+			virtual void	 OnLButtonUp(const glm::ivec2& eye) override;
+			virtual void	 OnRButtonUp(const glm::ivec2& eye) override;
+			virtual void	 OnMouseMove(const glm::ivec2& eye, int button) override;
+			virtual void	 OnMouseWheel(const glm::ivec2& eye, bool zoomin) override;
 
 		protected:
 			xCamera*	m_camera;
-			xMousePos   m_lastLDown;
-			xMousePos   m_lastRDown;
+			glm::ivec2   m_lastLDown;
+			glm::ivec2   m_lastRDown;
 			xTexture	m_logoImg;
 			xShader		m_sampleShader;
 
@@ -303,4 +305,4 @@ namespace xlonlat
 		};
 	}
 }
-#endif // _XEASYGL_H_
+#endif // XEASYGL_HEADER
