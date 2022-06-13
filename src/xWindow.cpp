@@ -4,6 +4,7 @@ namespace xlonlat
 {
 	namespace xEasyGL
 	{
+
         void OnSize(GLFWwindow* window, int width, int height)
         {
             xViewer* viewer = (xViewer*)glfwGetWindowUserPointer(window);
@@ -16,7 +17,6 @@ namespace xlonlat
             event.tag = 0;
 
             viewer->Event(event);
-            viewer->OnSize(width, height);
         }
         
         // @param[button] 0:Left | 1:Right | 2:Middle.
@@ -45,21 +45,6 @@ namespace xlonlat
             mouse.y = (int)y;
 
             viewer->Event(event);
-            switch (event.type)
-            {
-            case xEasyGL::MouseUp:
-            {
-                     if (btn == 0) viewer->OnLButtonUp(mouse);
-                else if (btn == 1) viewer->OnRButtonUp(mouse);
-            }break;
-            case xEasyGL::MouseDown:
-            {
-                     if (btn == 0) viewer->OnLButtonDown(mouse);
-                else if (btn == 1) viewer->OnRButtonDown(mouse);
-            }break;
-            default:
-                break;
-            }
         }
 
         void OnMouseMove(GLFWwindow* window, double x, double y)
@@ -83,7 +68,6 @@ namespace xlonlat
             mouse.y = (int)y;
 
             viewer->Event(event);
-            viewer->OnMouseMove(mouse, btn);
         }
 
          // @param[yoff] 1:zoomin | -1:zoomout.
@@ -99,14 +83,13 @@ namespace xlonlat
             event.type = xEasyGL::MouseWheel;
             event.x = (int)x;
             event.y = (int)y;
-            event.tag = yoff > 0 ? 1 : 0;
+            event.tag = yoff > 0 ? 1 : -1;
 
             glm::ivec2 mouse{};
             mouse.x = (int)x;
             mouse.y = (int)y;
 
             viewer->Event(event);
-            viewer->OnMouseWheel(mouse, yoff > 0);
         }
 
 		void OnKeyEvent(GLFWwindow* window, int key, int scancode, int action, int mode)
@@ -129,27 +112,14 @@ namespace xlonlat
 				event.tag = key;
 
 				viewer->Event(event);
-
-				if (action == GLFW_PRESS)          
-					viewer->OnKeyDown(key);
-				else if (action == GLFW_RELEASE)           
-					viewer->OnKeyUp(key);
 			}
 		}
 
-		xWindow::xWindow(xViewer* viewer) : m_viewer(viewer), m_window(nullptr)
-		{
-		}
 
-		xWindow::~xWindow()
-		{
-		}
-
-		void xWindow::Run()
-		{
-            int width = m_viewer->Camera().State().vs.w;
-            int height = m_viewer->Camera().State().vs.h;
-
+		xWindow::xWindow(const char* title, uint32_t width, uint32_t height, xViewer* viewer) :
+            m_pViewer(viewer), 
+            m_pWindow(nullptr)
+        {
             glfwInit();
 
             glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
@@ -158,59 +128,68 @@ namespace xlonlat
             // Setup the render mode: GLFW_OPENGL_CORE_PROFILE or GLFW_OPENGL_COMPAT_PROFILE.
             glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_COMPAT_PROFILE);
 
-            m_window = glfwCreateWindow(width, height, "xApp", nullptr, nullptr);
-            if (m_window == nullptr)
+            m_pWindow = glfwCreateWindow(width, height, "xApp", nullptr, nullptr);
+            if (m_pWindow == nullptr)
             {
                 glfwTerminate();
                 return;
             }
 
-            glfwMakeContextCurrent(m_window);
-			glfwSetWindowUserPointer(m_window, (void*)m_viewer);
-			glfwSetKeyCallback(m_window, OnKeyEvent);
-            glfwSetScrollCallback(m_window, OnMouseWheel);
-            glfwSetCursorPosCallback(m_window, OnMouseMove);
-            glfwSetMouseButtonCallback(m_window, OnMouseEvent);
-            glfwSetFramebufferSizeCallback(m_window, OnSize);
-			glfwSwapInterval(1);
+            glfwMakeContextCurrent(m_pWindow);
+            glfwSetWindowUserPointer(m_pWindow, (void*)m_pViewer);
+            glfwSetKeyCallback(m_pWindow, OnKeyEvent);
+            glfwSetScrollCallback(m_pWindow, OnMouseWheel);
+            glfwSetCursorPosCallback(m_pWindow, OnMouseMove);
+            glfwSetMouseButtonCallback(m_pWindow, OnMouseEvent);
+            glfwSetFramebufferSizeCallback(m_pWindow, OnSize);
+            glfwSwapInterval(1);
 
             // After MakeContextCurrent. 
             {
                 glewInit();
             }
 
-            if (m_viewer)
+            OnSize(m_pWindow, width, height);
+
+            if (m_pViewer)
             {
-                m_viewer->Initialize();
+                m_pViewer->Initialize();
             }
+		}
 
-            while (!glfwWindowShouldClose(m_window))
+		xWindow::~xWindow()
+		{
+            if (m_pViewer)
             {
-                if (glfwGetKey(m_window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
-                    glfwSetWindowShouldClose(m_window, true);
-
-                if (m_viewer)
-                {
-                    m_viewer->Render();
-                }
-
-                glfwSwapBuffers(m_window);
-                glfwPollEvents();
-            }
-
-            if (m_viewer)
-            {
-                m_viewer->Clear();
+                m_pViewer->Clear();
             }
 
             glfwTerminate();
-            m_window = nullptr;
+            m_pWindow = nullptr;
 
-            if (m_viewer)
+            if (m_pViewer)
             {
-                delete m_viewer;
-                m_viewer = nullptr;
+                delete m_pViewer;
+                m_pViewer = nullptr;
             }
 		}
+
+		void xWindow::Run()
+		{
+            while (m_pWindow && !glfwWindowShouldClose(m_pWindow))
+            {
+                if (glfwGetKey(m_pWindow, GLFW_KEY_ESCAPE) == GLFW_PRESS)
+                    glfwSetWindowShouldClose(m_pWindow, true);
+
+                if (m_pViewer)
+                {
+                    m_pViewer->Render();
+                }
+
+                glfwSwapBuffers(m_pWindow);
+                glfwPollEvents();
+            }
+		}
+
 	}
 }

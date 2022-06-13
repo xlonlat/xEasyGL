@@ -58,5 +58,49 @@ namespace xlonlat
 			delete[] achar;
 			return data;
 		}
+	
+
+
+		void xEventParser::Event(const xEvent& event)
+		{
+			OnEvent(event);
+
+			switch (event.type)
+			{
+			case xEventType::MouseUp:
+			{
+				if (event.tag == 0) OnLButtonUp(event.x, event.y);
+				else if (event.tag == 1) OnRButtonUp(event.x, event.y);
+				else if (event.tag == 2) OnMButtonUp(event.x, event.y);
+			} break;
+			case xEventType::MouseDown:
+			{
+				if (event.tag == 0) OnLButtonDown(event.x, event.y);
+				else if (event.tag == 1) OnRButtonDown(event.x, event.y);
+				else if (event.tag == 2) OnMButtonDown(event.x, event.y);
+			} break;
+			case xEventType::MouseWheel:
+			{
+				OnMouseWheel(event.x, event.y, event.tag);
+			} break;
+			case xEventType::MouseMove:
+			{
+				OnMouseMove(event.x, event.y, event.tag);
+			} break;
+			case xEventType::Resize:
+			{
+				OnSize(event.x, event.y);
+			} break;
+			case xEventType::KeyUp:
+			{
+				OnKeyUp(event.tag);
+			} break;
+			case xEventType::KeyDown:
+			{
+				OnKeyDown(event.tag);
+			} break;
+			}
+		}
+
 	}
 }

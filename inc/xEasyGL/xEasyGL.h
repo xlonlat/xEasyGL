@@ -68,8 +68,8 @@ namespace xlonlat
 
 		struct xProjState
 		{
-			float	zNear;
-			float	zFar;
+			float	near;
+			float	far;
 			float	fovy;
 			float	aspect;
 		};
@@ -81,23 +81,6 @@ namespace xlonlat
 			glm::vec3		up;
 			xProjState		ps;
 			xViewportState	vs;
-		};
-
-		struct xShaderToy
-		{
-			glm::vec3   iResolution;			// viewport resolution (in pixels)
-			float		iTime;					// shader playback time (in seconds)
-			float		iTimeDelta;				// render time (in seconds)
-			int			iFrame;					// shader playback frame
-			float		iChannelTime[4];		// channel playback time (in seconds)
-			glm::vec3   iChannelResolution[4];	// channel resolution (in pixels)
-			glm::vec4   iMouse;					// mouse pixel coords. xy: current (if MLB down), zw: click
-			int			iChannel0;				// input channel. XX = 2D/Cube
-			int			iChannel1;				// input channel. XX = 2D/Cube
-			int			iChannel2;				// input channel. XX = 2D/Cube
-			int			iChannel3;				// input channel. XX = 2D/Cube
-			glm::vec4   iDate;                  // (year, month, day, time in seconds)
-			float		iSampleRate;			// sound sample rate (i.e., 44100)
 		};
 
 		class xViewer;
@@ -167,6 +150,34 @@ namespace xlonlat
 			GLuint	m_fs;
 		};
 
+		class XEASYGL_API xShaderToy	
+		{
+		public:
+			xShaderToy() {}
+			virtual ~xShaderToy() {}
+
+			int		LoadCode(const char* code);
+			int		LoadFile(const char* file);
+
+		private:
+			struct 
+			{
+				glm::vec3   iResolution;			// viewport resolution (in pixels)
+				float		iTime;					// shader playback time (in seconds)
+				float		iTimeDelta;				// render time (in seconds)
+				int			iFrame;					// shader playback frame
+				float		iChannelTime[4];		// channel playback time (in seconds)
+				glm::vec3   iChannelResolution[4];	// channel resolution (in pixels)
+				glm::vec4   iMouse;					// mouse pixel coords. xy: current (if MLB down), zw: click
+				int			iChannel0;				// input channel. XX = 2D/Cube
+				int			iChannel1;				// input channel. XX = 2D/Cube
+				int			iChannel2;				// input channel. XX = 2D/Cube
+				int			iChannel3;				// input channel. XX = 2D/Cube
+				glm::vec4   iDate;                  // (year, month, day, time in seconds)
+				float		iSampleRate;			// sound sample rate (i.e., 44100)
+			};
+		};
+
 		class XEASYGL_API xTexture
 		{
 		public:
@@ -191,100 +202,95 @@ namespace xlonlat
 
 		class XEASYGL_API xEventParser
 		{
-		public :
-			virtual void OnLButtonUp(const glm::ivec2& eye){}
-			virtual void OnRButtonUp(const glm::ivec2& eye){}
-			virtual void OnLButtonDown(const glm::ivec2& eye){}
-			virtual void OnRButtonDown(const glm::ivec2& eye){}
-			virtual void OnMouseMove(const glm::ivec2& eye, int button) {}
-			virtual void OnMouseWheel(const glm::ivec2& eye, bool zoomin) {}
-			virtual void OnSize(int cx, int cy) {}
+		public:
+			virtual void Event(const xEvent& event);
+		protected:
+			virtual void OnEvent(const xEvent& event) {}
+			virtual void OnSize(int width, int height) {}
 			virtual void OnKeyUp(int key) {}
 			virtual void OnKeyDown(int key) {}
+			virtual void OnLButtonUp(int cx, int cy) {}
+			virtual void OnRButtonUp(int cx, int cy) {}
+			virtual void OnMButtonUp(int cx, int cy) {}
+			virtual void OnLButtonDown(int cx, int cy) {}
+			virtual void OnRButtonDown(int cx, int cy) {}
+			virtual void OnMButtonDown(int cx, int cy) {}
+			virtual void OnMouseMove(int cx, int cy, int button) {}
+			virtual void OnMouseWheel(int cx, int cy, int zoom) {}
 		};
 
-		class XEASYGL_API xCamera
+		class XEASYGL_API xCamera : public xEventParser
 		{
 		public:
 			xCamera();
 			virtual ~xCamera();
 
-			void	Update();	// Called by render process.
-			void	Link(const xViewer* viewer);
+			double	Timespan() const;
+			float	PixelSize(const xCameraState& state, float dis2cam) const;
 
-			void	SetState(const xCameraState& state);
-			void	SetViewport(const xViewportState& vs);
-			void	SetProjection(const xProjState& ps);
+			const	xCameraState& State() const;
 
-			virtual void	Pan(const glm::ivec2& posA, const glm::ivec2& posB, int param = 0) = 0;
-			virtual void	Rotate(const glm::ivec2& posA, const glm::ivec2& posB, int param = 0) = 0;
-			virtual void	Zoom(const glm::ivec2& eye, bool zoomin, int param = 0) = 0;
+			const	glm::mat4& ProjMat()	const;
+			const	glm::mat4& ViewMat()	const;
 
-			const xCameraState& State() const { return m_state; }
-		
+			virtual void	Update();
+			virtual void	SetState(const xCameraState& state);
+
 		protected:
-			xCameraState	m_state;
-			xCameraState	m_statePre;
-			const xViewer*	m_viewer;
+			double			m_Timespan;
+			const xViewer*	m_Viewer;
+			xCameraState	m_State; 
+			xCameraState	m_StatePre; 
+		};
+
+		class XEASYGL_API xDefaultCamera : public xCamera
+		{
+		public:
+			xDefaultCamera();
+			virtual ~xDefaultCamera();
+
+		protected:
+			virtual void	OnSize(int width, int height) override;
+
+			virtual void	OnLButtonUp(int cx, int cy);
+			virtual void	OnRButtonUp(int cx, int cy);
+			virtual void	OnMouseMove(int cx, int cy, int button);
+			virtual void	OnMouseWheel(int cx, int cy, int zoom);
+			
 		private:
-			xCamera(const xCamera& camera) {}
-		};
+			glm::ivec2		m_lastLDown;
+			glm::ivec2		m_lastRDown;
 
-		class XEASYGL_API xFirstPersonCamera : public xCamera
-		{
-		public:
-			xFirstPersonCamera();
-			virtual ~xFirstPersonCamera();
-
-			virtual void	Pan(const glm::ivec2& pos0, const glm::ivec2& pos1, int param = 0) override;
-			virtual void	Rotate(const glm::ivec2& pos0, const glm::ivec2& pos1, int param = 0) override;
-			virtual void	Zoom(const glm::ivec2& eye, bool zoomin, int param = 0) override;
-		};
-
-		class XEASYGL_API xMapCamera : public xCamera
-		{
-		public:
-			xMapCamera();
-			virtual ~xMapCamera();
-
-			virtual void	Pan(const glm::ivec2& pos0, const glm::ivec2& pos1, int param = 0) override;
-			virtual void	Rotate(const glm::ivec2& pos0, const glm::ivec2& pos1, int param = 0) override;
-			virtual void	Zoom(const glm::ivec2& eye, bool zoomin, int param = 0) override;
 		};
 
 		class XEASYGL_API xLayer : public xEventParser
 		{
 		public:
-			xLayer(const xViewer* viewer):m_viewer(viewer) {}
+			xLayer(const xViewer* viewer):m_pViewer(viewer) {}
 			virtual void	Clear() = 0;
 			virtual void	Draw2D() = 0;
 			virtual void	Draw3D() = 0;
 		protected:
-			const xViewer* m_viewer;
+			const xViewer* m_pViewer;
 		};
 
 		class XEASYGL_API xViewer : public xEventParser
 		{
 		public:
-			xViewer(int width, int height, xCamera* camera = nullptr);
+			xViewer(xCamera* camera = nullptr);
 			~xViewer(void);
 
-			xCamera&         Camera()	const;
+			xCamera&        Camera()	const;
 
-			virtual void	 Initialize();
-			virtual void	 Render();
-			virtual void	 Clear();
-			virtual void	 Event(const xEvent& event);
+			virtual void	Initialize();
+			virtual void	Render();
+			virtual void	Clear();
 
-			virtual void	 OnLButtonUp(const glm::ivec2& eye) override;
-			virtual void	 OnRButtonUp(const glm::ivec2& eye) override;
-			virtual void	 OnMouseMove(const glm::ivec2& eye, int button) override;
-			virtual void	 OnMouseWheel(const glm::ivec2& eye, bool zoomin) override;
+		private:
+			virtual void	OnEvent(const xEvent& event) override;
 
 		protected:
 			xCamera*	m_camera;
-			glm::ivec2   m_lastLDown;
-			glm::ivec2   m_lastRDown;
 			xTexture	m_logoImg;
 			xShader		m_sampleShader;
 
@@ -295,13 +301,13 @@ namespace xlonlat
 		class XEASYGL_API xWindow
 		{
 		public:
-			xWindow(xViewer* viewer);
+			xWindow(const char* title, uint32_t width, uint32_t height, xViewer* viewer);
 			virtual ~xWindow();
 
 			void    Run();
 		private:
-			xViewer*	m_viewer;
-			GLFWwindow* m_window;
+			xViewer*	m_pViewer;
+			GLFWwindow* m_pWindow;
 		};
 	}
 }

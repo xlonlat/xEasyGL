@@ -907,7 +907,7 @@ GLAPI void GLAPIENTRY glDeleteLists (GLuint list, GLsizei range);
 GLAPI void GLAPIENTRY glDeleteTextures (GLsizei n, const GLuint *textures);
 GLAPI void GLAPIENTRY glDepthFunc (GLenum func);
 GLAPI void GLAPIENTRY glDepthMask (GLboolean flag);
-GLAPI void GLAPIENTRY glDepthRange (GLclampd zNear, GLclampd zFar);
+GLAPI void GLAPIENTRY glDepthRange (GLclampd near, GLclampd far);
 GLAPI void GLAPIENTRY glDisable (GLenum cap);
 GLAPI void GLAPIENTRY glDisableClientState (GLenum array);
 GLAPI void GLAPIENTRY glDrawArrays (GLenum mode, GLint first, GLsizei count);
@@ -941,7 +941,7 @@ GLAPI void GLAPIENTRY glFogfv (GLenum pname, const GLfloat *params);
 GLAPI void GLAPIENTRY glFogi (GLenum pname, GLint param);
 GLAPI void GLAPIENTRY glFogiv (GLenum pname, const GLint *params);
 GLAPI void GLAPIENTRY glFrontFace (GLenum mode);
-GLAPI void GLAPIENTRY glFrustum (GLdouble left, GLdouble right, GLdouble bottom, GLdouble top, GLdouble zNear, GLdouble zFar);
+GLAPI void GLAPIENTRY glFrustum (GLdouble left, GLdouble right, GLdouble bottom, GLdouble top, GLdouble near, GLdouble far);
 GLAPI GLuint GLAPIENTRY glGenLists (GLsizei range);
 GLAPI void GLAPIENTRY glGenTextures (GLsizei n, GLuint *textures);
 GLAPI void GLAPIENTRY glGetBooleanv (GLenum pname, GLboolean *params);
@@ -1034,7 +1034,7 @@ GLAPI void GLAPIENTRY glNormal3iv (const GLint *v);
 GLAPI void GLAPIENTRY glNormal3s (GLshort nx, GLshort ny, GLshort nz);
 GLAPI void GLAPIENTRY glNormal3sv (const GLshort *v);
 GLAPI void GLAPIENTRY glNormalPointer (GLenum type, GLsizei stride, const void *pointer);
-GLAPI void GLAPIENTRY glOrtho (GLdouble left, GLdouble right, GLdouble bottom, GLdouble top, GLdouble zNear, GLdouble zFar);
+GLAPI void GLAPIENTRY glOrtho (GLdouble left, GLdouble right, GLdouble bottom, GLdouble top, GLdouble near, GLdouble far);
 GLAPI void GLAPIENTRY glPassThrough (GLfloat token);
 GLAPI void GLAPIENTRY glPixelMapfv (GLenum map, GLsizei mapsize, const GLfloat *values);
 GLAPI void GLAPIENTRY glPixelMapuiv (GLenum map, GLsizei mapsize, const GLuint *values);
@@ -14515,7 +14515,7 @@ typedef void (GLAPIENTRY * PFNGLCOPYIMAGESUBDATANVPROC) (GLuint srcName, GLenum 
 
 typedef void (GLAPIENTRY * PFNGLCLEARDEPTHDNVPROC) (GLdouble depth);
 typedef void (GLAPIENTRY * PFNGLDEPTHBOUNDSDNVPROC) (GLdouble zmin, GLdouble zmax);
-typedef void (GLAPIENTRY * PFNGLDEPTHRANGEDNVPROC) (GLdouble zNear, GLdouble zFar);
+typedef void (GLAPIENTRY * PFNGLDEPTHRANGEDNVPROC) (GLdouble near, GLdouble far);
 
 #define glClearDepthdNV GLEW_GET_FUN(__glewClearDepthdNV)
 #define glDepthBoundsdNV GLEW_GET_FUN(__glewDepthBoundsdNV)
@@ -17846,11 +17846,11 @@ typedef void (GLAPIENTRY * PFNGLALPHAFUNCXPROC) (GLenum func, GLclampx ref);
 typedef void (GLAPIENTRY * PFNGLCLEARCOLORXPROC) (GLclampx red, GLclampx green, GLclampx blue, GLclampx alpha);
 typedef void (GLAPIENTRY * PFNGLCLEARDEPTHXPROC) (GLclampx depth);
 typedef void (GLAPIENTRY * PFNGLCOLOR4XPROC) (GLfixed red, GLfixed green, GLfixed blue, GLfixed alpha);
-typedef void (GLAPIENTRY * PFNGLDEPTHRANGEXPROC) (GLclampx zNear, GLclampx zFar);
+typedef void (GLAPIENTRY * PFNGLDEPTHRANGEXPROC) (GLclampx near, GLclampx far);
 typedef void (GLAPIENTRY * PFNGLFOGXPROC) (GLenum pname, GLfixed param);
 typedef void (GLAPIENTRY * PFNGLFOGXVPROC) (GLenum pname, const GLfixed* params);
-typedef void (GLAPIENTRY * PFNGLFRUSTUMFPROC) (GLfloat left, GLfloat right, GLfloat bottom, GLfloat top, GLfloat zNear, GLfloat zFar);
-typedef void (GLAPIENTRY * PFNGLFRUSTUMXPROC) (GLfixed left, GLfixed right, GLfixed bottom, GLfixed top, GLfixed zNear, GLfixed zFar);
+typedef void (GLAPIENTRY * PFNGLFRUSTUMFPROC) (GLfloat left, GLfloat right, GLfloat bottom, GLfloat top, GLfloat near, GLfloat far);
+typedef void (GLAPIENTRY * PFNGLFRUSTUMXPROC) (GLfixed left, GLfixed right, GLfixed bottom, GLfixed top, GLfixed near, GLfixed far);
 typedef void (GLAPIENTRY * PFNGLLIGHTMODELXPROC) (GLenum pname, GLfixed param);
 typedef void (GLAPIENTRY * PFNGLLIGHTMODELXVPROC) (GLenum pname, const GLfixed* params);
 typedef void (GLAPIENTRY * PFNGLLIGHTXPROC) (GLenum light, GLenum pname, GLfixed param);
@@ -17862,8 +17862,8 @@ typedef void (GLAPIENTRY * PFNGLMATERIALXVPROC) (GLenum face, GLenum pname, cons
 typedef void (GLAPIENTRY * PFNGLMULTMATRIXXPROC) (const GLfixed* m);
 typedef void (GLAPIENTRY * PFNGLMULTITEXCOORD4XPROC) (GLenum target, GLfixed s, GLfixed t, GLfixed r, GLfixed q);
 typedef void (GLAPIENTRY * PFNGLNORMAL3XPROC) (GLfixed nx, GLfixed ny, GLfixed nz);
-typedef void (GLAPIENTRY * PFNGLORTHOFPROC) (GLfloat left, GLfloat right, GLfloat bottom, GLfloat top, GLfloat zNear, GLfloat zFar);
-typedef void (GLAPIENTRY * PFNGLORTHOXPROC) (GLfixed left, GLfixed right, GLfixed bottom, GLfixed top, GLfixed zNear, GLfixed zFar);
+typedef void (GLAPIENTRY * PFNGLORTHOFPROC) (GLfloat left, GLfloat right, GLfloat bottom, GLfloat top, GLfloat near, GLfloat far);
+typedef void (GLAPIENTRY * PFNGLORTHOXPROC) (GLfixed left, GLfixed right, GLfixed bottom, GLfixed top, GLfixed near, GLfixed far);
 typedef void (GLAPIENTRY * PFNGLPOINTSIZEXPROC) (GLfixed size);
 typedef void (GLAPIENTRY * PFNGLPOLYGONOFFSETXPROC) (GLfixed factor, GLfixed units);
 typedef void (GLAPIENTRY * PFNGLROTATEXPROC) (GLfixed angle, GLfixed x, GLfixed y, GLfixed z);
