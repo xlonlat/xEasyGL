@@ -4,7 +4,9 @@ namespace xlonlat
 {
 	namespace xEasyGL
 	{
-		xCamera::xCamera() : m_Viewer(nullptr), m_Timespan(0)
+		xCamera::xCamera() : 
+			m_Viewer(nullptr),
+			m_Timespan(16), m_LastClock(0), m_FrameCounter(0)
 		{
 		}
 
@@ -15,16 +17,26 @@ namespace xlonlat
 		void xCamera::Update()
 		{
 			memcpy(&m_State, &m_StatePre, sizeof(xCameraState));
+
+			clock_t curr = clock();
+			if (m_LastClock == 0) m_LastClock = curr;
+			if (++m_FrameCounter > 10)
+			{
+				clock_t span = (curr - m_LastClock);
+				m_Timespan = 1.0 * span / m_FrameCounter;
+				m_FrameCounter = 0;
+				m_LastClock = curr;
+			}
 		}
 
-		const glm::mat4& xCamera::ProjMat() const
+		glm::mat4 xCamera::ProjMat() const
 		{
 			const xProjState& ps = m_State.ps;
 			const xViewportState& vs = m_State.vs;
 			return glm::perspectiveFovRH(glm::radians(ps.fovy), (float)vs.w, (float)vs.h, ps.near, ps.far);
 		}
 
-		const glm::mat4& xCamera::ViewMat() const
+		glm::mat4 xCamera::ViewMat() const
 		{
 			return glm::lookAtRH(m_State.eye, m_State.tar, m_State.up);
 		}

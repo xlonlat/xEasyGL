@@ -128,5 +128,70 @@ namespace xlonlat
 		{
 			glUseProgram(0);
 		}
+
+
+		xShaderToy::xShaderToy(const wchar_t* file)
+		{
+			const std::wstring& vs_file = std::wstring(xGlobal::Instance().ResourcePath()) + L"shaders\\canvas.vs";
+
+			m_Shader = new xShader();
+			m_Shader->Load(vs_file.c_str(), file);
+
+			m_Block.iResolution = glm::vec3(0);
+
+			m_StartClock = 0;
+			m_FrameCount = 0;
+		}
+
+		xShaderToy::~xShaderToy()
+		{
+			m_Shader->Clear();
+			delete m_Shader;
+		}
+
+		void xShaderToy::Draw(const xViewer* viewer)
+		{
+			const xCamera& camera = viewer->Camera();
+
+			clock_t curr_clock = clock();
+			if (m_StartClock == 0) m_StartClock = curr_clock;
+
+			m_Block.iResolution = glm::vec3(camera.State().vs.w, camera.State().vs.h, 0);
+			m_Block.iTime		= (curr_clock - m_StartClock) / 1000.f;
+			m_Block.iTimeDelta  = camera.Timespan() / 1000.f;
+			m_Block.iFrame		= m_FrameCount++;
+			m_Block.iMouse		= glm::vec4(m_MousePosition, 1);
+
+			m_Shader->Enable();
+			{
+				GLint iResolutionLoc	= glGetUniformLocation(m_Shader->ID(), "iResolution");
+				GLint iTimeLoc			= glGetUniformLocation(m_Shader->ID(), "iTime");
+				GLint iTimeDeltaLoc		= glGetUniformLocation(m_Shader->ID(), "iTimeDelta");
+				GLint iFrameLoc			= glGetUniformLocation(m_Shader->ID(), "iFrame");
+				GLint iMouseLoc			= glGetUniformLocation(m_Shader->ID(), "iMouse");
+
+				glUniform3f(iResolutionLoc, m_Block.iResolution.x, m_Block.iResolution.y, m_Block.iResolution.z);
+				glUniform1f(iTimeLoc,		m_Block.iTime);
+				glUniform1f(iTimeDeltaLoc,	m_Block.iTimeDelta);
+				glUniform1i(iFrameLoc,		m_Block.iFrame);
+				glUniform4f(iMouseLoc,		m_Block.iMouse.x, m_Block.iMouse.y, m_Block.iMouse.z, m_Block.iMouse.w);
+			}
+			glDrawArrays(GL_TRIANGLES, 0, 6);
+			m_Shader->Disable();
+		}
+
+		void xShaderToy::OnEvent(const xEvent& event)
+		{
+			if (event.type == xEventType::MouseMove)
+			{
+				m_MousePosition.x = event.x;
+				m_MousePosition.y = event.y;
+				m_MousePosition.z = (event.tag == 0);
+			}
+			if (event.type == xEventType::MouseUp)
+			{
+				m_MousePosition.z = 0;
+			}
+		}
 	}
 }

@@ -21,9 +21,6 @@ namespace xlonlat
 
 		xGlobal::xGlobal()
 		{
-			//char* aaa = (char*)(new char[4]);
-			//char* bbb = (char*)malloc(4);
-
 			wchar_t szFilePath[MAX_PATH+1] = { 0 };
 			GetModuleFileNameW(NULL, szFilePath, MAX_PATH);
 			(wcsrchr(szFilePath, ('\\')))[1] = 0;
@@ -57,6 +54,11 @@ namespace xlonlat
 			unsigned char* data = stbi_load(achar, &width, &height, &channel, 0);
 			delete[] achar;
 			return data;
+		}
+
+		int xGlobal::GetCurrentThread() const
+		{
+			return (int)::GetCurrentThreadId();
 		}
 	
 
@@ -100,6 +102,42 @@ namespace xlonlat
 				OnKeyDown(event.tag);
 			} break;
 			}
+		}
+
+
+		xUniformBuffer::xUniformBuffer(uint32_t size, uint32_t binding) :
+			m_ID(0), m_Binding(binding), m_Size(size)
+		{
+			glGenBuffers(1, &m_ID);
+			glBindBuffer(GL_UNIFORM_BUFFER, m_ID);
+			glBufferData(GL_UNIFORM_BUFFER, m_Size, nullptr, GL_DYNAMIC_DRAW);
+			glBindBuffer(GL_UNIFORM_BUFFER, 0);
+		}
+
+		xUniformBuffer::~xUniformBuffer()
+		{
+			if (m_ID > 0)
+			{
+				glDeleteBuffers(1, &m_ID);
+				m_ID = m_Binding = m_Size = 0;
+			}
+		}
+
+		void xUniformBuffer::Bind() const
+		{
+			glBindBufferBase(GL_UNIFORM_BUFFER, m_Binding, m_ID);
+		}
+
+		void xUniformBuffer::Unbind() const
+		{
+			glBindBufferBase(GL_UNIFORM_BUFFER, m_Binding, 0);
+		}
+
+		void xUniformBuffer::Update(const void* data) const
+		{
+			glBindBuffer(GL_UNIFORM_BUFFER, m_ID);
+			glBufferSubData(GL_UNIFORM_BUFFER, 0, m_Size, data);
+			glBindBuffer(GL_UNIFORM_BUFFER, 0);
 		}
 
 	}

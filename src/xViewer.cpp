@@ -4,7 +4,8 @@ namespace xlonlat
 {
 	namespace xEasyGL
 	{
-		xViewer::xViewer(xCamera* camera/* = nullptr */)
+		xViewer::xViewer(xCamera* camera/* = nullptr */) : 
+			m_RenderThreadID(-1)
 		{
 			camera == nullptr ? m_camera = new xDefaultCamera() : m_camera = camera;
 
@@ -21,8 +22,31 @@ namespace xlonlat
 			return *m_camera;
 		}
 
+		void xViewer::AttachLayer(xLayer* layer)
+		{
+			if (layer == nullptr) return;
+			layer->OnAttach();
+			m_Layers.push_back(layer);
+		}
+
+		void xViewer::DetachLayer(xLayer* layer)
+		{
+			if (layer == nullptr) return;
+			for (auto itor = m_Layers.begin(); itor != m_Layers.end(); itor++)
+			{
+				if (*itor == layer)
+				{
+					layer->OnDetach();
+					m_Layers.erase(itor);
+					break;
+				}
+			}
+		}
+
 		void xViewer::Initialize()
 		{
+			m_RenderThreadID = xGlobal::Instance().GetCurrentThread();
+
 			const std::wstring& img = std::wstring(xGlobal::Instance().ResourcePath()) + L"images\\opengl_logo.jpeg";
 			m_logoImg.Load(img.c_str());
 
@@ -43,6 +67,31 @@ namespace xlonlat
 			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 			glEnable(GL_DEPTH_TEST);
+			glEnable(GL_BLEND);
+			glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
+			Begin3D();
+			{
+				m_sampleShader.Enable();
+				glDrawArrays(GL_TRIANGLES, 0, 3);
+				m_sampleShader.Disable();
+
+				glBegin(GL_LINES);
+				for (int i = -100; i <= 100; i += 2)
+				{
+					glColor3f(0.4f, 0.4f, 0.4f); glVertex3f(i * 1.0f, 100.0f, 0.0f);
+					glColor3f(0.4f, 0.4f, 0.4f); glVertex3f(i * 1.0f, -100.0f, 0.0f);
+
+					glColor3f(0.4f, 0.4f, 0.4f); glVertex3f(100.0f, i * 1.0f, 0.0f);
+					glColor3f(0.4f, 0.4f, 0.4f); glVertex3f(-100.0f, i * 1.0f, 0.0f);
+				}
+				glEnd();
+
+				for (auto layer : m_Layers)
+				{
+					layer->OnDraw3D();
+				}
+			}
 
 			Begin2D();
 			{
@@ -72,36 +121,22 @@ namespace xlonlat
 					glEnd();
 					glDisable(GL_TEXTURE_2D);
 				}
-			}
 
-			Begin3D();
-			{
-				m_sampleShader.Enable();
-				glPushMatrix();
-				glScaled(10.0, 10.0, 10.0);
-				glBegin(GL_TRIANGLES);
-				glColor3f(1.0f, 0.0f, 0.0f); glVertex3f( 0.0f,  1.0f, 0.0f);
-				glColor3f(0.0f, 1.0f, 0.0f); glVertex3f(-1.0f, -1.0f, 0.0f);
-				glColor3f(0.0f, 0.0f, 1.0f); glVertex3f( 1.0f, -1.0f, 0.0f);
-				glEnd();
-				glPopMatrix();
-				m_sampleShader.Disable();
-
-				glBegin(GL_LINES);
-				for (int i=-100; i<=100; i+=2)
+				for (auto layer : m_Layers)
 				{
-					glColor3f(0.4f, 0.4f, 0.4f); glVertex3f(i * 1.0f,  100.0f, 0.0f);
-					glColor3f(0.4f, 0.4f, 0.4f); glVertex3f(i * 1.0f, -100.0f, 0.0f);
-
-					glColor3f(0.4f, 0.4f, 0.4f); glVertex3f( 100.0f, i * 1.0f, 0.0f);
-					glColor3f(0.4f, 0.4f, 0.4f); glVertex3f(-100.0f, i * 1.0f, 0.0f);
+					layer->OnDraw2D();
 				}
-				glEnd();
 			}
 		}
 
 		void xViewer::Clear()
 		{
+			for (auto layer : m_Layers)
+			{
+				layer->OnDetach();
+				delete layer;
+			}
+			m_Layers.clear();
 			m_sampleShader.Clear();
 			m_logoImg.Clear();
 		}
@@ -111,6 +146,10 @@ namespace xlonlat
 			if (m_camera != nullptr)
 			{
 				m_camera->Event(event);
+			}
+			for (auto layer : m_Layers)
+			{
+				layer->Event(event);
 			}
 		}
 
